@@ -28,10 +28,77 @@ void insere_elemento(Lista *lista, int id, float nota) {
     lista->quantidade++;
 }
 
+int busca_elemento(Lista *lista, int id_alvo) {
+    No *atual = lista->inicio;
+    int contador = 0;
+
+    while (atual != NULL && atual->id != id_alvo) {
+        atual = atual->prox;
+        contador++;
+    }
+    return (atual == NULL) ? -1 : contador;
+}
+
+void remove_elemento(Lista *lista, int id_alvo) {
+    No *atual = lista->inicio;
+    No *anterior = NULL;
+
+    while (atual != NULL && atual->id != id_alvo) {
+        anterior = atual;
+        atual = atual->prox;
+    }
+
+    if (atual == NULL) {
+        printf("Elemento nao encontrado!\n");
+        return;
+    }
+
+    if (atual->id == id_alvo) {
+        printf("Elemento encontrado\n");
+
+        // Quando é o primeiro elemento da lista
+        if (anterior == NULL) {
+            
+            // Se a lista tiver apenas um elemento
+            if (lista->inicio == lista->fim) {
+                lista->fim = atual->prox;
+            }
+
+            // Se a lista tiver mais de um elemento
+            lista->inicio = atual->prox;
+            free(atual);
+        } else { // Quando não é o primeiro da lista
+            
+            // Se for o último da lista
+            if (atual->prox == NULL) {
+                lista->fim = anterior;
+            }
+            anterior->prox = atual->prox;
+
+            free(atual);
+        }
+        lista->quantidade--;
+    }
+    
+}
+
 void imprimir_lista(Lista *lista) {
     No *no_aux = lista->inicio;
     while (no_aux != NULL) {
         printf("ID: %d | Nota: %.2f\n", no_aux->id, no_aux->nota);
         no_aux = no_aux->prox;
     }
+}
+
+void libera_lista(Lista *lista) {
+    No *atual = lista->inicio;
+    No *no_aux = NULL;
+
+    while (atual != NULL) {
+        no_aux = atual->prox;
+        free(atual);
+        atual = no_aux;
+    }
+
+    free(lista);
 }

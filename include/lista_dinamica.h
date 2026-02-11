@@ -20,5 +20,8 @@ typedef struct lista Lista;
 Lista* inicializa_lista(void);
 void insere_elemento(Lista *lista, int id, float nota);
 void imprimir_lista(Lista *lista);
+int busca_elemento(Lista *lista, int id_alvo);
+void remove_elemento(Lista *lista, int id_alvo);
+void libera_lista(Lista *lista);
 
 #endif
