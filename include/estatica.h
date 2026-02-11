@@ -9,18 +9,17 @@
 typedef struct {
     int id;
     float nota;
-    int prox; 
-} Elemento;
+    int prox;  
+} No;
 
 // Estrutura de Controle da Lista
 typedef struct {
-    Elemento dados[MAX]; 
+    No dados[MAX]; 
     int inicio;          
     int dispo;           
     int quantidade;      
 } ListaEstatica;
 
-// Protótipos das funções a serem defininadas
 void inicializa_lista(ListaEstatica *l);
 bool insere_elemento(ListaEstatica *l, int id, float nota);
 bool remove_elemento(ListaEstatica *l, int id);
