@@ -19,12 +19,11 @@ void insere_elemento(Lista *lista, int id, float nota) {
 
     if (lista->quantidade == 0) {
         lista->inicio = novo_no;
-        lista->fim = novo_no;
     } else {
         (lista->fim)->prox = novo_no;
-        lista->fim = novo_no;
     }
-
+    lista->fim = novo_no;
+    
     lista->quantidade++;
 }
 
@@ -53,36 +52,37 @@ void remove_elemento(Lista *lista, int id_alvo) {
         return;
     }
 
-    if (atual->id == id_alvo) {
-        printf("Elemento encontrado\n");
+    printf("Elemento encontrado\n");
 
-        // Quando é o primeiro elemento da lista
-        if (anterior == NULL) {
-            
-            // Se a lista tiver apenas um elemento
-            if (lista->inicio == lista->fim) {
-                lista->fim = atual->prox;
-            }
-
-            // Se a lista tiver mais de um elemento
-            lista->inicio = atual->prox;
-            free(atual);
-        } else { // Quando não é o primeiro da lista
-            
-            // Se for o último da lista
-            if (atual->prox == NULL) {
-                lista->fim = anterior;
-            }
-            anterior->prox = atual->prox;
-
-            free(atual);
+    // Quando é o primeiro elemento da lista
+    if (anterior == NULL) {
+        
+        // Se a lista tiver apenas um elemento
+        if (lista->inicio == lista->fim) {
+            lista->fim = atual->prox;
         }
-        lista->quantidade--;
+
+        // Se a lista tiver mais de um elemento
+        lista->inicio = atual->prox;
+    } else { // Quando não é o primeiro da lista
+        
+        // Se for o último da lista
+        if (atual->prox == NULL) {
+            lista->fim = anterior;
+        }
+        anterior->prox = atual->prox;
+
     }
+    free(atual);
+    lista->quantidade--;
     
 }
 
 void imprimir_lista(Lista *lista) {
+    if (lista->quantidade == 0) {
+        printf("Lista vazia.\n");
+    }
+    
     No *no_aux = lista->inicio;
     while (no_aux != NULL) {
         printf("ID: %d | Nota: %.2f\n", no_aux->id, no_aux->nota);
