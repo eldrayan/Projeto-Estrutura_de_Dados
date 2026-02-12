@@ -2,8 +2,8 @@
 #include <stdlib.h>
 #include "lista_dinamica.h"
 
-Lista* inicializa_lista(void) {
-    Lista *lista = (Lista*)malloc(sizeof(Lista));
+ListaDinamica* inicializa_lista(void) {
+    ListaDinamica *lista = (ListaDinamica*)malloc(sizeof(ListaDinamica));
     lista->inicio = NULL;
     lista->fim = NULL;
     lista->quantidade = 0;
@@ -11,7 +11,7 @@ Lista* inicializa_lista(void) {
     return lista;
 }
 
-void insere_elemento(Lista *lista, int id, float nota) {
+void insere_elemento(ListaDinamica *lista, int id, float nota) {
     No *novo_no = (No*)malloc(sizeof(No));
     novo_no->id = id;
     novo_no->nota = nota;
@@ -27,7 +27,7 @@ void insere_elemento(Lista *lista, int id, float nota) {
     lista->quantidade++;
 }
 
-int busca_elemento(Lista *lista, int id_alvo) {
+int busca_elemento(ListaDinamica *lista, int id_alvo) {
     No *atual = lista->inicio;
     int contador = 0;
 
@@ -38,7 +38,7 @@ int busca_elemento(Lista *lista, int id_alvo) {
     return (atual == NULL) ? -1 : contador;
 }
 
-void remove_elemento(Lista *lista, int id_alvo) {
+void remove_elemento(ListaDinamica *lista, int id_alvo) {
     No *atual = lista->inicio;
     No *anterior = NULL;
 
@@ -78,7 +78,7 @@ void remove_elemento(Lista *lista, int id_alvo) {
     
 }
 
-void imprimir_lista(Lista *lista) {
+void imprimir_lista(ListaDinamica *lista) {
     if (lista->quantidade == 0) {
         printf("Lista vazia.\n");
     }
@@ -90,7 +90,7 @@ void imprimir_lista(Lista *lista) {
     }
 }
 
-void libera_lista(Lista *lista) {
+void libera_lista(ListaDinamica *lista) {
     No *atual = lista->inicio;
     No *no_aux = NULL;
 

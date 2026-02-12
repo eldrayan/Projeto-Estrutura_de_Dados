@@ -4,7 +4,7 @@
 int main() {
 
     // Fluxo para testar implementações
-    Lista *lista = inicializa_lista();
+    ListaDinamica *lista = inicializa_lista();
 
     printf("--- Teste de Insercao ---\n");
     insere_elemento(lista, 1, 8.5);

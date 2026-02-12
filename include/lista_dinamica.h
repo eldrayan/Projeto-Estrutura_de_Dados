@@ -15,7 +15,7 @@ struct lista {
     int quantidade;
 };
 
-typedef struct lista Lista;
+typedef struct lista ListaDinamica;
 
 /**
  * @brief Aloca e inicializa a estrutura de controle da lista.
@@ -24,7 +24,7 @@ typedef struct lista Lista;
  * 
  * @return Lista* Ponteiro para a nova lista criada e zerada.
  */
-Lista* inicializa_lista(void);
+ListaDinamica* inicializa_lista(void);
 
 /**
  * @brief Cria um novo Nó e o insere ao fim da lista encadeada.
@@ -35,7 +35,7 @@ Lista* inicializa_lista(void);
  * @param id Identificador único do aluno
  * @param nota Valor da nota do aluno
  */
-void insere_elemento(Lista *lista, int id, float nota);
+void insere_elemento(ListaDinamica *lista, int id, float nota);
 
 /**
  * @brief Percorre a lista e imprime os dados de todos os nós no console.
@@ -44,7 +44,7 @@ void insere_elemento(Lista *lista, int id, float nota);
  * 
  * @param lista Ponterio para a lista a ser exibida
  */
-void imprimir_lista(Lista *lista);
+void imprimir_lista(ListaDinamica *lista);
 
 /**
  * @brief Procura a posição (índice) de um elemento pelo seu ID.
@@ -54,7 +54,7 @@ void imprimir_lista(Lista *lista);
  * @param id_alvo O ID do aluno que se deseja encontrar
  * @return int O índice do elemento (iniciando em 0) ou -1 caso não seja encontrado
  */
-int busca_elemento(Lista *lista, int id_alvo);
+int busca_elemento(ListaDinamica *lista, int id_alvo);
 
 /**
  * @brief Localiza, remove e desaloca um elemento da lista através do ID.
@@ -64,7 +64,7 @@ int busca_elemento(Lista *lista, int id_alvo);
  * @param lista Ponteiro para a lista de onde o elemento será removido
  * @param id_alvo O ID do aluno a ser excluído
  */
-void remove_elemento(Lista *lista, int id_alvo);
+void remove_elemento(ListaDinamica *lista, int id_alvo);
 
 /**
  * @brief Libera toda a memória dinâmica utilizada pela lista.
@@ -73,6 +73,6 @@ void remove_elemento(Lista *lista, int id_alvo);
  * 
  * @param lista Ponterio para a lista que será destruída.
  */
-void libera_lista(Lista *lista);
+void libera_lista(ListaDinamica *lista);
 
 #endif
