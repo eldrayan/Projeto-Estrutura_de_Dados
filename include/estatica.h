@@ -9,7 +9,8 @@
 typedef struct {
     int id;
     float nota;
-    int prox;  
+    int prox;
+    int ant;  // Ponteiro para o nó anterior (lista duplamente encadeada)
 } No;
 
 // Estrutura de Controle da Lista
@@ -21,8 +22,8 @@ typedef struct {
 } ListaEstatica;
 
 void inicializa_lista(ListaEstatica *l);
-bool insere_elemento(ListaEstatica *l, int id, float nota);
-bool remove_elemento(ListaEstatica *l, int id);
+void insere_elemento(ListaEstatica *l, int id, float nota);
+void remove_elemento(ListaEstatica *l, int id);
 int busca_elemento(ListaEstatica *l, int id); 
 void imprime_lista(ListaEstatica *l);
 int tamanho_lista(ListaEstatica *l);
