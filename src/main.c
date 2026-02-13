@@ -12,6 +12,7 @@ int main() {
     insere_elemento(lista, 3, 7.5);
     insere_elemento(lista, 4, 10.0);
     imprimir_lista(lista);
+    imprimir_inverso(lista);
     
     printf("\n--- Teste de Busca ---\n");
     int idx = busca_elemento(lista, 3);
@@ -21,19 +22,30 @@ int main() {
     printf("\n--- Teste de Remocao (Meio: ID 2) ---\n");
     remove_elemento(lista, 2);
     imprimir_lista(lista);
+    imprimir_inverso(lista);
     
     printf("\n--- Teste de Remocao (Inicio: ID 1) ---\n");
     remove_elemento(lista, 1);
     imprimir_lista(lista);
+    imprimir_inverso(lista);
     
     printf("\n--- Teste de Remocao (Fim: ID 4) ---\n");
     remove_elemento(lista, 4);
     imprimir_lista(lista);
+    imprimir_inverso(lista);
     
     printf("\n--- Teste de Remocao (Unico: ID 3) ---\n");
     remove_elemento(lista, 3);
     imprimir_lista(lista);
-
+    imprimir_inverso(lista);
+    
+    remove_elemento(lista, 99);
+    insere_elemento(lista, 5, 3.0);
+    insere_elemento(lista, 6, 4.0);
+    insere_elemento(lista, 7, 2.5);
+    imprimir_lista(lista);
+    imprimir_inverso(lista);
+    
     libera_lista(lista);
     return 0;
 }

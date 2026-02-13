@@ -2,6 +2,7 @@
 #define LISTA_DINAMICA_H
 
 struct no {
+    struct no *ant;
     int id;
     float nota;
     struct no *prox;
@@ -45,6 +46,15 @@ void insere_elemento(ListaDinamica *lista, int id, float nota);
  * @param lista Ponterio para a lista a ser exibida
  */
 void imprimir_lista(ListaDinamica *lista);
+
+/**
+ * @brief Percorre a lista em ordem invertida e imprime os dados de todos os nós no console.
+ * * Exibe o ID e a Nota de cada aluno.
+ * Caso a lista esteja vazia, informa o usuário adequadamente.
+ * 
+ * @param lista Ponteiro para a lista a ser exibida
+ */
+void imprimir_inverso(ListaDinamica *lista);
 
 /**
  * @brief Procura a posição (índice) de um elemento pelo seu ID.
