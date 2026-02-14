@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include "lista_dinamica.h"
 
-ListaDinamica* inicializa_lista(void) {
+ListaDinamica* lista_dinamica_inicializa(void) {
     ListaDinamica *lista = (ListaDinamica*)malloc(sizeof(ListaDinamica));
     lista->inicio = NULL;
     lista->fim = NULL;
@@ -11,8 +11,8 @@ ListaDinamica* inicializa_lista(void) {
     return lista;
 }
 
-void insere_elemento(ListaDinamica *lista, int id, float nota) {
-    No *novo_no = (No*)malloc(sizeof(No));
+void lista_dinamica_insere(ListaDinamica *lista, int id, float nota) {
+    NoDinamico *novo_no = (NoDinamico*)malloc(sizeof(NoDinamico));
     novo_no->ant = NULL;
     novo_no->id = id;
     novo_no->nota = nota;
@@ -29,8 +29,8 @@ void insere_elemento(ListaDinamica *lista, int id, float nota) {
     lista->quantidade++;
 }
 
-int busca_elemento(ListaDinamica *lista, int id_alvo) {
-    No *atual = lista->inicio;
+int lista_dinamica_busca(ListaDinamica *lista, int id_alvo) {
+    NoDinamico *atual = lista->inicio;
     int contador = 0;
 
     while (atual != NULL && atual->id != id_alvo) {
@@ -40,8 +40,8 @@ int busca_elemento(ListaDinamica *lista, int id_alvo) {
     return (atual == NULL) ? -1 : contador;
 }
 
-void remove_elemento(ListaDinamica *lista, int id_alvo) {
-    No *atual = lista->inicio;
+void lista_dinamica_remove(ListaDinamica *lista, int id_alvo) {
+    NoDinamico *atual = lista->inicio;
 
     // Busca do elemento
     while (atual != NULL && atual->id != id_alvo) {
@@ -74,22 +74,22 @@ void remove_elemento(ListaDinamica *lista, int id_alvo) {
     
 }
 
-void imprimir_lista(ListaDinamica *lista) {
+void lista_dinamica_imprimir(ListaDinamica *lista) {
     if (lista->quantidade == 0) printf("Lista vazia.\n");
     printf("--- Imprimindo de INICIO para FIM ---\n");
     
-    No *no_aux = lista->inicio;
+    NoDinamico *no_aux = lista->inicio;
     while (no_aux != NULL) {
         printf("ID: %d | Nota: %.2f\n", no_aux->id, no_aux->nota);
         no_aux = no_aux->prox;
     }
 }
 
-void imprimir_inverso(ListaDinamica *lista) {
+void lista_dinamica_imprimir_inverso(ListaDinamica *lista) {
     if (lista->quantidade == 0) printf("Lista vazia.\n");
     printf("--- Imprimindo de FIM para INICIO ---\n");
     
-    No *no_aux = lista->fim;
+    NoDinamico *no_aux = lista->fim;
     while (no_aux != NULL) {
         printf("ID: %d | Nota: %.2f\n", no_aux->id, no_aux->nota);
         no_aux = no_aux->ant;
@@ -97,9 +97,9 @@ void imprimir_inverso(ListaDinamica *lista) {
     
 }
 
-void libera_lista(ListaDinamica *lista) {
-    No *atual = lista->inicio;
-    No *no_aux = NULL;
+void lista_dinamica_libera(ListaDinamica *lista) {
+    NoDinamico *atual = lista->inicio;
+    NoDinamico *no_aux = NULL;
 
     while (atual != NULL) {
         no_aux = atual->prox;

@@ -1,6 +1,6 @@
 #include <stdio.h>
 #include <stdbool.h>
-#include "../../include/estatica.h" 
+#include "estatica.h" 
 
 /**
  * Inicializa a lista duplamente encadeada estática.
@@ -11,7 +11,7 @@
  * 
  * @param l Ponteiro para a estrutura ListaEstatica a ser inicializada
  */
-void inicializa_lista(ListaEstatica *l) {
+void lista_estatica_inicializa(ListaEstatica *l) {
     int i;
     l->inicio = -1;
     l->dispo = 0;
@@ -35,7 +35,7 @@ void inicializa_lista(ListaEstatica *l) {
  * @param id Identificador único do aluno
  * @param nota Nota do aluno (valor decimal)
  */
-void insere_elemento(ListaEstatica *l, int id, float nota) {
+void lista_estatica_insere(ListaEstatica *l, int id, float nota) {
     if (l->dispo == -1) {
         return; 
     }
@@ -75,7 +75,7 @@ void insere_elemento(ListaEstatica *l, int id, float nota) {
  * @param l Ponteiro para a estrutura ListaEstatica
  * @param id Identificador do elemento a ser removido
  */
-void remove_elemento(ListaEstatica *l, int id) {
+void lista_estatica_remove(ListaEstatica *l, int id) {
     if (l->inicio == -1) {
         return;
     }
@@ -128,7 +128,7 @@ void remove_elemento(ListaEstatica *l, int id) {
  * @param id Identificador do elemento a ser buscado
  * @return Índice do nó no array onde o elemento está armazenado, ou -1 se não encontrado
  */
-int busca_elemento(ListaEstatica *l, int id) {
+int lista_estatica_busca(ListaEstatica *l, int id) {
     int atual = l->inicio;
     
     while (atual != -1) {
@@ -149,7 +149,7 @@ int busca_elemento(ListaEstatica *l, int id) {
  * 
  * @param l Ponteiro para a estrutura ListaEstatica
  */
-void imprime_lista(ListaEstatica *l) {
+void lista_estatica_imprime(ListaEstatica *l) {
     int atual = l->inicio;
     
     printf("Lista Estática (Total: %d elementos):\n", l->quantidade);
@@ -171,6 +171,6 @@ void imprime_lista(ListaEstatica *l) {
  * @param l Ponteiro para a estrutura ListaEstatica
  * @return Quantidade de elementos na lista
  */
-int tamanho_lista(ListaEstatica *l) {
+int lista_estatica_tamanho(ListaEstatica *l) {
     return l->quantidade;
 }
