@@ -75,8 +75,7 @@ void lista_dinamica_remove(ListaDinamica *lista, int id_alvo) {
 }
 
 void lista_dinamica_imprimir(ListaDinamica *lista) {
-    if (lista->quantidade == 0) printf("Lista vazia.\n");
-    printf("--- Imprimindo de INICIO para FIM ---\n");
+    (lista->quantidade == 0) ? printf("Lista vazia.\n") : printf("*** Imprimindo de INICIO para FIM ***\n");
     
     NoDinamico *no_aux = lista->inicio;
     while (no_aux != NULL) {
@@ -86,8 +85,7 @@ void lista_dinamica_imprimir(ListaDinamica *lista) {
 }
 
 void lista_dinamica_imprimir_inverso(ListaDinamica *lista) {
-    if (lista->quantidade == 0) printf("Lista vazia.\n");
-    printf("--- Imprimindo de FIM para INICIO ---\n");
+    (lista->quantidade == 0) ? printf("Lista vazia.\n") : printf("*** Imprimindo de FIM para INICIO ***\n");
     
     NoDinamico *no_aux = lista->fim;
     while (no_aux != NULL) {
