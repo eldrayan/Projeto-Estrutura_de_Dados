@@ -1,21 +1,42 @@
 #ifndef LISTA_DINAMICA_H
 #define LISTA_DINAMICA_H
 
-struct no {
-    int id;
-    float nota;
-    struct no *prox;
+/**
+ * @brief Representa um Nó (elemento) da lista duplamente encadeada.
+ * Armazena os dados do aluno e os ponteiros para navegar
+ * em ambas as direções (trás e frente).
+ */
+struct no_dinamico {
+    struct no_dinamico *ant;     ///< Ponteiro para o nó anterior (NULL se for o 1º)
+    int id;             ///< Identificador único do aluno
+    float nota;         ///< Nota obtida pelo aluno
+    struct no_dinamico *prox;    ///< Ponteiro para o próximo nó (NULL se for o último)
 };
 
-typedef struct no No;
+/**
+ * @brief Representa um Nó (elemento) da lista duplamente encadeada.
+ * Armazena os dados do aluno e os ponteiros para navegar
+ * em ambas as direções (trás e frente).
+ */
+typedef struct no_dinamico NoDinamico;
 
-struct lista {
-    No *inicio;
-    No *fim;
-    int quantidade;
+/**
+ * @brief Estrutura de controle da Lista Dinâmica Duplamente Encadeada.
+ * Mantém os metadados necessários para operações O(1) nas pontas
+ * e gerencia o tamanho atual da coleção.
+ */
+struct lista_dinamica {
+    NoDinamico *inicio;         ///< Aponta para o primeiro elemento da lista
+    NoDinamico *fim;            ///< Aponta para o último elemento (facilita inserção no fim)
+    int quantidade;     ///< Contador de elementos ativos (para acesso rápido ao tamanho)
 };
 
-typedef struct lista Lista;
+/**
+ * @brief Estrutura de controle da Lista Dinâmica Duplamente Encadeada.
+ * Mantém os metadados necessários para operações O(1) nas pontas
+ * e gerencia o tamanho atual da coleção.
+ */
+typedef struct lista_dinamica ListaDinamica;
 
 /**
  * @brief Aloca e inicializa a estrutura de controle da lista.
@@ -24,7 +45,7 @@ typedef struct lista Lista;
  * 
  * @return Lista* Ponteiro para a nova lista criada e zerada.
  */
-Lista* inicializa_lista(void);
+ListaDinamica* lista_dinamica_inicializa(void);
 
 /**
  * @brief Cria um novo Nó e o insere ao fim da lista encadeada.
@@ -35,7 +56,7 @@ Lista* inicializa_lista(void);
  * @param id Identificador único do aluno
  * @param nota Valor da nota do aluno
  */
-void insere_elemento(Lista *lista, int id, float nota);
+void lista_dinamica_insere(ListaDinamica *lista, int id, float nota);
 
 /**
  * @brief Percorre a lista e imprime os dados de todos os nós no console.
@@ -44,7 +65,16 @@ void insere_elemento(Lista *lista, int id, float nota);
  * 
  * @param lista Ponterio para a lista a ser exibida
  */
-void imprimir_lista(Lista *lista);
+void lista_dinamica_imprimir(ListaDinamica *lista);
+
+/**
+ * @brief Percorre a lista em ordem invertida e imprime os dados de todos os nós no console.
+ * * Exibe o ID e a Nota de cada aluno.
+ * Caso a lista esteja vazia, informa o usuário adequadamente.
+ * 
+ * @param lista Ponteiro para a lista a ser exibida
+ */
+void lista_dinamica_imprimir_inverso(ListaDinamica *lista);
 
 /**
  * @brief Procura a posição (índice) de um elemento pelo seu ID.
@@ -54,7 +84,7 @@ void imprimir_lista(Lista *lista);
  * @param id_alvo O ID do aluno que se deseja encontrar
  * @return int O índice do elemento (iniciando em 0) ou -1 caso não seja encontrado
  */
-int busca_elemento(Lista *lista, int id_alvo);
+int lista_dinamica_busca(ListaDinamica *lista, int id_alvo);
 
 /**
  * @brief Localiza, remove e desaloca um elemento da lista através do ID.
@@ -64,7 +94,7 @@ int busca_elemento(Lista *lista, int id_alvo);
  * @param lista Ponteiro para a lista de onde o elemento será removido
  * @param id_alvo O ID do aluno a ser excluído
  */
-void remove_elemento(Lista *lista, int id_alvo);
+void lista_dinamica_remove(ListaDinamica *lista, int id_alvo);
 
 /**
  * @brief Libera toda a memória dinâmica utilizada pela lista.
@@ -73,6 +103,6 @@ void remove_elemento(Lista *lista, int id_alvo);
  * 
  * @param lista Ponterio para a lista que será destruída.
  */
-void libera_lista(Lista *lista);
+void lista_dinamica_libera(ListaDinamica *lista);
 
 #endif

@@ -2,8 +2,8 @@
 #include <stdlib.h>
 #include "lista_dinamica.h"
 
-Lista* inicializa_lista(void) {
-    Lista *lista = (Lista*)malloc(sizeof(Lista));
+ListaDinamica* lista_dinamica_inicializa(void) {
+    ListaDinamica *lista = (ListaDinamica*)malloc(sizeof(ListaDinamica));
     lista->inicio = NULL;
     lista->fim = NULL;
     lista->quantidade = 0;
@@ -11,8 +11,9 @@ Lista* inicializa_lista(void) {
     return lista;
 }
 
-void insere_elemento(Lista *lista, int id, float nota) {
-    No *novo_no = (No*)malloc(sizeof(No));
+void lista_dinamica_insere(ListaDinamica *lista, int id, float nota) {
+    NoDinamico *novo_no = (NoDinamico*)malloc(sizeof(NoDinamico));
+    novo_no->ant = NULL;
     novo_no->id = id;
     novo_no->nota = nota;
     novo_no->prox = NULL;
@@ -20,6 +21,7 @@ void insere_elemento(Lista *lista, int id, float nota) {
     if (lista->quantidade == 0) {
         lista->inicio = novo_no;
     } else {
+        novo_no->ant = lista->fim;
         (lista->fim)->prox = novo_no;
     }
     lista->fim = novo_no;
@@ -27,8 +29,8 @@ void insere_elemento(Lista *lista, int id, float nota) {
     lista->quantidade++;
 }
 
-int busca_elemento(Lista *lista, int id_alvo) {
-    No *atual = lista->inicio;
+int lista_dinamica_busca(ListaDinamica *lista, int id_alvo) {
+    NoDinamico *atual = lista->inicio;
     int contador = 0;
 
     while (atual != NULL && atual->id != id_alvo) {
@@ -38,61 +40,64 @@ int busca_elemento(Lista *lista, int id_alvo) {
     return (atual == NULL) ? -1 : contador;
 }
 
-void remove_elemento(Lista *lista, int id_alvo) {
-    No *atual = lista->inicio;
-    No *anterior = NULL;
+void lista_dinamica_remove(ListaDinamica *lista, int id_alvo) {
+    NoDinamico *atual = lista->inicio;
 
+    // Busca do elemento
     while (atual != NULL && atual->id != id_alvo) {
-        anterior = atual;
         atual = atual->prox;
-    }
 
+    }
+    
     if (atual == NULL) {
         printf("Elemento nao encontrado!\n");
         return;
     }
-
+    
     printf("Elemento encontrado\n");
-
-    // Quando é o primeiro elemento da lista
-    if (anterior == NULL) {
-        
-        // Se a lista tiver apenas um elemento
-        if (lista->inicio == lista->fim) {
-            lista->fim = atual->prox;
-        }
-
-        // Se a lista tiver mais de um elemento
+    
+    // Verifica se tem elemento à esquerda do atual
+    if (atual->ant != NULL) {
+        atual->ant->prox = atual->prox;
+    } else {
         lista->inicio = atual->prox;
-    } else { // Quando não é o primeiro da lista
-        
-        // Se for o último da lista
-        if (atual->prox == NULL) {
-            lista->fim = anterior;
-        }
-        anterior->prox = atual->prox;
+    }
 
+    // Verifica se tem elemento à direita do atual
+    if (atual->prox != NULL) {
+        atual->prox->ant = atual->ant;
+    } else {
+        lista->fim = atual->ant;
     }
     free(atual);
     lista->quantidade--;
     
 }
 
-void imprimir_lista(Lista *lista) {
-    if (lista->quantidade == 0) {
-        printf("Lista vazia.\n");
-    }
+void lista_dinamica_imprimir(ListaDinamica *lista) {
+    (lista->quantidade == 0) ? printf("Lista vazia.\n") : printf("*** Imprimindo de INICIO para FIM ***\n");
     
-    No *no_aux = lista->inicio;
+    NoDinamico *no_aux = lista->inicio;
     while (no_aux != NULL) {
         printf("ID: %d | Nota: %.2f\n", no_aux->id, no_aux->nota);
         no_aux = no_aux->prox;
     }
 }
 
-void libera_lista(Lista *lista) {
-    No *atual = lista->inicio;
-    No *no_aux = NULL;
+void lista_dinamica_imprimir_inverso(ListaDinamica *lista) {
+    (lista->quantidade == 0) ? printf("Lista vazia.\n") : printf("*** Imprimindo de FIM para INICIO ***\n");
+    
+    NoDinamico *no_aux = lista->fim;
+    while (no_aux != NULL) {
+        printf("ID: %d | Nota: %.2f\n", no_aux->id, no_aux->nota);
+        no_aux = no_aux->ant;
+    }
+    
+}
+
+void lista_dinamica_libera(ListaDinamica *lista) {
+    NoDinamico *atual = lista->inicio;
+    NoDinamico *no_aux = NULL;
 
     while (atual != NULL) {
         no_aux = atual->prox;
