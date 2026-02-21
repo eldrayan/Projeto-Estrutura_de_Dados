@@ -1,4 +1,4 @@
-#include "insertion.h"
+#include "bubble.h"
 
 // Bubble Sort = ordena as notas dos alunos de maneira crescente
 

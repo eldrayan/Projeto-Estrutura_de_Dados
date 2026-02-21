@@ -1,9 +1,6 @@
 #include <stdio.h>
-#include "insertion.h"
+#include "bubble.h"
 #include "testes_manuais.h"
-
-// Declaração da função bubble_sort
-void bubble_sort(Aluno v[], int n);
 
 // Função auxiliar para imprimir o array de alunos
 void imprimir_alunos(Aluno v[], int n) {
