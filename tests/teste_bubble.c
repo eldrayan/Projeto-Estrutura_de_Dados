@@ -36,7 +36,7 @@ void executar_teste_bubble_sort() {
     printf("\n");
     
     // Teste 2: Array já ordenado
-    printf("2. Teste com array ja ordenado:\n");
+    printf("2. Teste com array já ordenado:\n");
     Aluno teste2[] = {
         {104, 6.5},
         {102, 7.0},
@@ -94,7 +94,7 @@ void executar_teste_bubble_sort() {
     printf("\n");
     
     // Teste 5: Array com 1 elemento
-    printf("5. Teste com um unico elemento:\n");
+    printf("5. Teste com um único elemento:\n");
     Aluno teste5[] = {
         {301, 10.0}
     };
