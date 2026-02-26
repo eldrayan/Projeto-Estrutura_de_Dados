@@ -12,8 +12,9 @@ void exibir_menu() {
     printf("Escolha uma opcao:\n");
     printf("[1] Executar testes da Lista Estatica\n");
     printf("[2] Executar testes da Lista Dinamica\n");
-    printf("[3] Executar teste do Bubble Sort\n");
-    printf("[4] Executar todos os testes\n");
+    printf("[3] Executar testes do Bubble Sort\n");
+    printf("[4] Executar testes do Selection Sort\n");
+    printf("[5] Executar todos os testes\n");
     printf("[0] Sair\n");
 }
 
@@ -42,11 +43,18 @@ int main() {
             
             case 4:
                 printf("\n");
+                executar_testes_selection_sort();
+                break;
+
+            case 5:
+                printf("\n");
                 executar_testes_lista_estatica();
                 printf("\n\n");
                 executar_testes_lista_dinamica();
                 printf("\n\n");
                 executar_teste_bubble_sort();
+                printf("\n\n");
+                executar_testes_selection_sort();
                 break;
 
             case 0:
