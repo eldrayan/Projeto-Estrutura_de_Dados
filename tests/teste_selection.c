@@ -21,20 +21,20 @@ void testes_selection_dinamica() {
     lista_dinamica_insere(lista_dinamica, 8, 9.5);
     
     printf("--- CASO 1: Teste com Lista Dinamica Desordenada ---\n");
-    printf("\t--- Antes:\n");
+    printf("   Antes:  ");
     lista_dinamica_imprimir(lista_dinamica);
     printf("\n");
     selection_sort_dinamica(lista_dinamica);
-    printf("\t--- Depois:\n");
+    printf("   Depois: ");
     lista_dinamica_imprimir(lista_dinamica);
     
     
     printf("\n\n--- CASO 2: Teste com Lista Dinamica Ordenada ---\n");
-    printf("\t--- Antes:\n");
+    printf("   Antes:  ");
     lista_dinamica_imprimir(lista_dinamica);
     printf("\n");
     selection_sort_dinamica(lista_dinamica);
-    printf("\t--- Depois:\n");
+    printf("   Depois: ");
     lista_dinamica_imprimir(lista_dinamica);
     
     for (size_t i = 1; i <= 8; i++) {
@@ -51,11 +51,11 @@ void testes_selection_dinamica() {
     lista_dinamica_insere(lista_dinamica, 8, 3.7);
     
     printf("\n\n--- CASO 3: Teste com Lista Dinamica Inversamente Ordenada ---\n");
-    printf("\t--- Antes:\n");
+    printf("   Antes:  ");
     lista_dinamica_imprimir(lista_dinamica);
     printf("\n");
     selection_sort_dinamica(lista_dinamica);
-    printf("\t--- Depois:\n");
+    printf("   Depois: ");
     lista_dinamica_imprimir(lista_dinamica);
     
     lista_dinamica_libera(lista_dinamica);
@@ -77,19 +77,19 @@ void testes_selection_estatica() {
     lista_estatica_insere(&lista_estatica, 8, 6.5);
     
     printf("--- CASO 1: Teste com Lista Estatica Desordenada ---\n");
-    printf("\t--- Antes:\n");
+    printf("   Antes:  ");
     lista_estatica_imprime(&lista_estatica);
     printf("\n");
     selection_sort_estatica(&lista_estatica);
-    printf("\t--- Depois:\n");
+    printf("   Depois: ");
     lista_estatica_imprime(&lista_estatica);
     
     printf("\n\n--- CASO 2: Teste com Lista Estatica Ordenada ---\n");
-    printf("\t--- Antes:\n");
+    printf("   Antes:  ");
     lista_estatica_imprime(&lista_estatica);
     printf("\n");
     selection_sort_estatica(&lista_estatica);
-    printf("\t--- Depois:\n");
+    printf("   Depois: ");
     lista_estatica_imprime(&lista_estatica);
     
     for (size_t i = 1; i <= 8; i++) {
@@ -106,15 +106,15 @@ void testes_selection_estatica() {
     lista_estatica_insere(&lista_estatica, 8, 3.6);
     
     printf("\n\n--- CASO 3: Teste com Lista Estatica Inversamente Ordenada ---\n");
-    printf("\t--- Antes:\n");
+    printf("   Antes:  ");
     lista_estatica_imprime(&lista_estatica);
     printf("\n");
     selection_sort_estatica(&lista_estatica);
-    printf("\t--- Depois:\n");
+    printf("   Depois: ");
     lista_estatica_imprime(&lista_estatica);
 }
 
-void executar_testes_selection_sort() {
+void executar_teste_selection_sort() {
     testes_selection_dinamica();
     printf("\n-----------------------------------------\n");
     testes_selection_estatica();
