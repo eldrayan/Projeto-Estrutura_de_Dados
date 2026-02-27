@@ -3,7 +3,7 @@
 #include "lista_dinamica.h"
 #include "estatica.h"
 
-void selection_sort_dinamica(ListaDinamica* lista);
-void selection_sort_estatica(ListaEstatica* lista);
+void selection_sort_dinamica(ListaDinamica *lista);
+void selection_sort_estatica(ListaEstatica *lista);
 
 #endif

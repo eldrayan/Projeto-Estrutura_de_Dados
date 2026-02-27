@@ -43,7 +43,7 @@ int main() {
             
             case 4:
                 printf("\n");
-                executar_testes_selection_sort();
+                executar_teste_selection_sort();
                 break;
 
             case 5:
@@ -54,7 +54,7 @@ int main() {
                 printf("\n\n");
                 executar_teste_bubble_sort();
                 printf("\n\n");
-                executar_testes_selection_sort();
+                executar_teste_selection_sort();
                 break;
 
             case 0:

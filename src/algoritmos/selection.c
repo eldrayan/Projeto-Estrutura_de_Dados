@@ -1,9 +1,11 @@
-#include <stdlib.h>
 #include "selection.h"
 #include "lista_dinamica.h"
 #include "estatica.h"
+#include <stddef.h>
 
-void selection_sort_dinamica(ListaDinamica* lista) {
+// Selection Sort = ordena as notas dos alunos de maneira crescente
+
+void selection_sort_dinamica(ListaDinamica *lista) {
     if (lista->inicio == NULL || lista->quantidade == 1) return;
 
     NoDinamico *atual, *busca, *menor;
@@ -39,7 +41,7 @@ void selection_sort_dinamica(ListaDinamica* lista) {
     }
 }
 
-void selection_sort_estatica(ListaEstatica* lista) {
+void selection_sort_estatica(ListaEstatica *lista) {
     if (lista->inicio == -1 || lista->quantidade == 1) return;
 
     int atual, busca, menor, aux_id;
