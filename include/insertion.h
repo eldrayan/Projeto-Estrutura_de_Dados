@@ -8,6 +8,11 @@ typedef struct {
     int id;
     float nota;
 } Aluno;
+
+// ordena vetor de alunos por nota (crescente)
+void insertion_sort(Aluno v[], int n);
+
+#endif
 #endif
 
 // Forward declarations para evitar include circular
