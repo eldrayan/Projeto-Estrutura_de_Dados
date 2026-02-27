@@ -1,120 +1,136 @@
-#include "bubble.h"
+#include "insertion.h"
+#include "lista_dinamica.h"
+#include "estatica.h"
 #include <stddef.h>
 
-// Bubble Sort = ordena as notas dos alunos de maneira crescente
+// Insertion Sort para vetor - ordena as notas dos alunos de maneira crescente
 
-void bubble_sort(Aluno v[], int n) {
-    
-    for (int i = 0; i < n - 1; i++) {
+void insertion_sort(Aluno v[], int n) {
+    for (int i = 1; i < n; i++) {
+        Aluno chave = v[i];
+        int j = i - 1;
         
-        // flag para detectar se houve troca
-        int trocou = 0;
-        
-        // percorre array comparando elementos adjacentes
-        for (int j = 0; j < n - 1 - i; j++) {
-            
-            // se elemento atual for maior que o próximo, troca
-            if (v[j].nota > v[j + 1].nota) {
-                Aluno temp = v[j];
-                v[j] = v[j + 1];
-                v[j + 1] = temp;
-                trocou = 1;
-            }
+        // Move elementos maiores que a chave uma posição à frente
+        while (j >= 0 && v[j].nota > chave.nota) {
+            v[j + 1] = v[j];
+            j--;
         }
         
-        // se não houve troca, o array já está ordenado
-        if (!trocou) {
-            break;
-        }
+        // Insere a chave na posição correta
+        v[j + 1] = chave;
     }
 }
 
-// Bubble Sort para Lista Dinâmica - ordena por nota (crescente)
-// Troca apenas os dados (id e nota), mantém os ponteiros intactos
-void bubble_sort_dinamica(ListaDinamica *l) {
+// Insertion Sort para Lista Dinâmica - ordena por nota (crescente)
+// Reconecta os ponteiros para inserir o nó na posição correta
+void insertion_sort_dinamica(ListaDinamica *l) {
     if (l == NULL || l->quantidade < 2) {
         return; // lista vazia ou com 1 elemento já está ordenada
     }
     
-    int n = l->quantidade;
+    // O primeiro nó já está "ordenado", começamos do segundo
+    NoDinamico *atual = l->inicio->prox;
     
-    for (int i = 0; i < n - 1; i++) {
-        int trocou = 0;
-        NoDinamico *atual = l->inicio;
+    while (atual != NULL) {
+        NoDinamico *proximo = atual->prox; // guarda o próximo antes de mover atual
         
-        // percorre a lista comparando nós adjacentes
-        for (int j = 0; j < n - 1 - i; j++) {
-            if (atual->prox == NULL) {
-                break;
-            }
-            
-            // compara nota do nó atual com o próximo
-            if (atual->nota > atual->prox->nota) {
-                // troca apenas os dados (id e nota), não os ponteiros
-                int temp_id = atual->id;
-                float temp_nota = atual->nota;
-                
-                atual->id = atual->prox->id;
-                atual->nota = atual->prox->nota;
-                
-                atual->prox->id = temp_id;
-                atual->prox->nota = temp_nota;
-                
-                trocou = 1;
-            }
-            
-            atual = atual->prox;
+        // Remove o nó atual da sua posição
+        if (atual->ant != NULL) {
+            atual->ant->prox = atual->prox;
+        }
+        if (atual->prox != NULL) {
+            atual->prox->ant = atual->ant;
+        } else {
+            l->fim = atual->ant; // se era o último, atualiza o fim
         }
         
-        // se não houve troca, a lista já está ordenada
-        if (!trocou) {
-            break;
+        // Busca a posição correta para inserir o nó
+        NoDinamico *posicao = l->inicio;
+        
+        // Se deve ser inserido antes do primeiro nó
+        if (atual->nota < l->inicio->nota) {
+            // Insere no início
+            atual->prox = l->inicio;
+            atual->ant = NULL;
+            l->inicio->ant = atual;
+            l->inicio = atual;
+        } else {
+            // Procura a posição onde inserir
+            while (posicao->prox != NULL && posicao->prox->nota < atual->nota) {
+                posicao = posicao->prox;
+            }
+            
+            // Insere após 'posicao'
+            atual->prox = posicao->prox;
+            atual->ant = posicao;
+            
+            if (posicao->prox != NULL) {
+                posicao->prox->ant = atual;
+            } else {
+                l->fim = atual; // se inserir no fim, atualiza o fim
+            }
+            
+            posicao->prox = atual;
         }
+        
+        // Avança para o próximo nó não ordenado
+        atual = proximo;
     }
 }
 
-// Bubble Sort para Lista Estática - ordena por nota (crescente)
-// Troca apenas os dados (id e nota), mantém os índices intactos
-void bubble_sort_estatica(ListaEstatica *l) {
+// Insertion Sort para Lista Estática - ordena por nota (crescente)
+// Ajusta os índices .prox para simular a inserção na posição correta
+void insertion_sort_estatica(ListaEstatica *l) {
     if (l == NULL || l->quantidade < 2) {
         return; // lista vazia ou com 1 elemento já está ordenada
     }
     
-    int n = l->quantidade;
+    // O primeiro nó já está "ordenado", começamos do segundo
+    int atual_idx = l->dados[l->inicio].prox;
     
-    for (int i = 0; i < n - 1; i++) {
-        int trocou = 0;
-        int atual = l->inicio;
+    while (atual_idx != -1) {
+        int proximo_idx = l->dados[atual_idx].prox; // guarda o próximo antes de mover atual
+        float nota_atual = l->dados[atual_idx].nota;
         
-        // percorre a lista comparando nós adjacentes
-        for (int j = 0; j < n - 1 - i; j++) {
-            if (l->dados[atual].prox == -1) {
-                break;
-            }
-            
-            int proximo = l->dados[atual].prox;
-            
-            // compara nota do nó atual com o próximo
-            if (l->dados[atual].nota > l->dados[proximo].nota) {
-                // troca apenas os dados (id e nota), não os índices
-                int temp_id = l->dados[atual].id;
-                float temp_nota = l->dados[atual].nota;
-                
-                l->dados[atual].id = l->dados[proximo].id;
-                l->dados[atual].nota = l->dados[proximo].nota;
-                
-                l->dados[proximo].id = temp_id;
-                l->dados[proximo].nota = temp_nota;
-                
-                trocou = 1;
-            }
-            
-            atual = l->dados[atual].prox;
+        // Remove o nó atual da cadeia
+        int ant_idx = l->dados[atual_idx].ant;
+        
+        if (ant_idx != -1) {
+            l->dados[ant_idx].prox = l->dados[atual_idx].prox;
+        }
+        if (l->dados[atual_idx].prox != -1) {
+            l->dados[l->dados[atual_idx].prox].ant = ant_idx;
         }
         
-        // se não houve troca, a lista já está ordenada
-        if (!trocou) {
-            break;
+        // Busca a posição correta para inserir o nó
+        // Se deve ser inserido antes do primeiro nó
+        if (nota_atual < l->dados[l->inicio].nota) {
+            // Insere no início
+            l->dados[atual_idx].prox = l->inicio;
+            l->dados[atual_idx].ant = -1;
+            l->dados[l->inicio].ant = atual_idx;
+            l->inicio = atual_idx;
+        } else {
+            // Procura a posição onde inserir
+            int posicao_idx = l->inicio;
+            
+            while (l->dados[posicao_idx].prox != -1 && 
+                   l->dados[l->dados[posicao_idx].prox].nota < nota_atual) {
+                posicao_idx = l->dados[posicao_idx].prox;
+            }
+            
+            // Insere após 'posicao_idx'
+            l->dados[atual_idx].prox = l->dados[posicao_idx].prox;
+            l->dados[atual_idx].ant = posicao_idx;
+            
+            if (l->dados[posicao_idx].prox != -1) {
+                l->dados[l->dados[posicao_idx].prox].ant = atual_idx;
+            }
+            
+            l->dados[posicao_idx].prox = atual_idx;
         }
+        
+        // Avança para o próximo nó não ordenado
+        atual_idx = proximo_idx;
     }
 }
