@@ -4,7 +4,7 @@
 #include <stddef.h>
 #include <stdlib.h>
 
-// ==================== MERGE SORT - LISTA DINÂMICA ====================
+//Lista Dinâmica
 
 /**
  * Divide a lista encadeada em duas metades
@@ -107,7 +107,8 @@ void merge_sort_dinamica(ListaDinamica *lista) {
     lista->fim = atual;
 }
 
-// ==================== MERGE SORT - LISTA ESTÁTICA ====================
+
+// Lista Estática
 
 /**
  * Mescla dois subarrays de índices ordenados
