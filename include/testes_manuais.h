@@ -6,5 +6,6 @@ void executar_testes_lista_dinamica(void);
 void executar_teste_bubble_sort(void);
 void executar_teste_selection_sort(void);
 void executar_teste_insertion_sort(void);
+void executar_testes_merge_sort(void);
 
 #endif
