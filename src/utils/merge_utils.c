@@ -1,4 +1,4 @@
-#include "utils_merge.h"
+#include "merge_utils.h"
 #include "lista_dinamica.h"
 #include "estatica.h"
 #include <stdlib.h>
