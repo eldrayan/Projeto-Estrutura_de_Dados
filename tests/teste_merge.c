@@ -3,6 +3,7 @@
 #include "lista_dinamica.h"
 #include "estatica.h"
 #include "merge.h"
+#include "testes_manuais.h"
 
 /**
  * Teste do Merge Sort para Lista Dinâmica
@@ -31,7 +32,6 @@ void teste_merge_sort_dinamica() {
     
     // Libera memória
     lista_dinamica_libera(lista);
-    free(lista);
     
     printf("\n✓ Teste da lista dinâmica completado!\n");
 }
