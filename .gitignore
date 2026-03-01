@@ -53,3 +53,28 @@ dkms.conf
 
 # debug information files
 *.dwo
+
+# =========================
+# Python
+# =========================
+__pycache__/
+*.pyc
+*.pyo
+
+# =========================
+# Dados gerados (massa de testes)
+# =========================
+*.csv
+data/
+
+# =========================
+# IDE / editor
+# =========================
+.vscode/
+.idea/
+
+# =========================
+# Sistema operacional
+# =========================
+.DS_Store
+Thumbs.db
