@@ -15,7 +15,8 @@ void exibir_menu() {
     printf("[3] Executar testes do Bubble Sort\n");
     printf("[4] Executar testes do Selection Sort\n");
     printf("[5] Executar testes do Insertion Sort\n");
-    printf("[6] Executar todos os testes\n");
+    printf("[6] Executar testes do Merge Sort\n");
+    printf("[7] Executar todos os testes\n");
     printf("[0] Sair\n");
 }
 
@@ -54,6 +55,11 @@ int main() {
 
             case 6:
                 printf("\n");
+                executar_testes_merge_sort();
+                break;
+
+            case 7:
+                printf("\n");
                 executar_testes_lista_estatica();
                 printf("\n\n");
                 executar_testes_lista_dinamica();
@@ -63,6 +69,8 @@ int main() {
                 executar_teste_selection_sort();
                 printf("\n\n");
                 executar_teste_insertion_sort();
+                printf("\n\n");
+                executar_testes_merge_sort();
                 break;
 
             case 0:
