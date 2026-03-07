@@ -61,6 +61,28 @@ static void merge_sort_recursivo(Aluno *arr, int esq, int dir, Aluno *temp) {
     }
 }
 
+/**
+ * @brief Merge Sort para vetor
+ * Ordena um vetor de Alunos por nota em ordem crescente
+ */
+void merge_sort(Aluno *arr, int n) {
+    if (arr == NULL || n <= 1) {
+        return;
+    }
+    
+    // Aloca vetor auxiliar para o merge
+    Aluno *temp = (Aluno*)malloc(n * sizeof(Aluno));
+    if (temp == NULL) {
+        return;
+    }
+    
+    // Executa merge sort
+    merge_sort_recursivo(arr, 0, n - 1, temp);
+    
+    // Libera memória auxiliar
+    free(temp);
+}
+
 // ==================== MERGE SORT - LISTA DINÂMICA ====================
 
 /**
