@@ -9,14 +9,14 @@
 void selection_sort(Aluno v[], int n) {
     for (int i = 0; i < n - 1; i++) {
         int menor = i;
-        
+
         // Encontra o índice do elemento menor
         for (int j = i + 1; j < n; j++) {
             if (v[j].nota < v[menor].nota) {
                 menor = j;
             }
         }
-        
+
         // Troca o elemento atual com o menor encontrado
         if (menor != i) {
             Aluno temp = v[i];
