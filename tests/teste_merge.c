@@ -1,4 +1,4 @@
-#include <stdio.h>
+﻿#include <stdio.h>
 #include <stdlib.h>
 #include "lista_dinamica.h"
 #include "estatica.h"
@@ -70,15 +70,15 @@ void teste_merge_sort_estatica() {
  */
 void executar_testes_merge_sort() {
     printf("\n");
-    printf("╔═══════════════════════════════════╗\n");
-    printf("║   TESTES DO MERGE SORT            ║\n");
-    printf("╚═══════════════════════════════════╝\n");
+    printf("=====================================\n");
+    printf("|   TESTES DO MERGE SORT            |\n");
+    printf("=====================================\n");
     
     teste_merge_sort_dinamica();
     teste_merge_sort_estatica();
     
     printf("\n");
-    printf("╔═══════════════════════════════════╗\n");
-    printf("║   TODOS OS TESTES COMPLETADOS!    ║\n");
-    printf("╚═══════════════════════════════════╝\n");
+    printf("=====================================\n");
+    printf("|   TODOS OS TESTES COMPLETADOS!    |\n");
+    printf("=====================================\n");
 }
