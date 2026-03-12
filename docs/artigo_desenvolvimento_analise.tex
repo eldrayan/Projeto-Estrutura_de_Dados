@@ -1,0 +1,517 @@
+\documentclass[conference]{IEEEtran}
+\usepackage[utf8]{inputenc}
+\usepackage[portuguese]{babel}
+\usepackage{amsmath}
+\usepackage{algorithm}
+\usepackage{algorithmic}
+\usepackage{graphicx}
+\usepackage{cite}
+\usepackage{url}
+
+\begin{document}
+
+\title{Análise Comparativa de Algoritmos de Ordenação em Estruturas de Dados Dinâmicas e Estáticas}
+
+\author{
+\IEEEauthorblockN{Rayan, Samuel, Diogo, Junio, Pedro, Lucas}
+\IEEEauthorblockA{
+Universidade Federal do Cariri - UFCA\\
+Engenharia de Software\\
+Disciplina: Estrutura de Dados\\
+}
+}
+
+\maketitle
+
+% ============================================================
+\section{Desenvolvimento}
+% ============================================================
+
+Esta seção descreve a implementação prática do sistema de ranking de alunos, detalhando as estruturas de dados utilizadas e os algoritmos de ordenação implementados.
+
+\subsection{Estruturas de Dados}
+
+Para avaliar o impacto da organização da memória no desempenho dos algoritmos, foram implementadas duas estruturas de dados distintas para armazenar o ranking de alunos:
+
+\subsubsection{Lista Encadeada Dinâmica}
+
+A lista dinâmica utiliza alocação de memória sob demanda, através das funções \texttt{malloc()} e \texttt{free()} da biblioteca padrão C. Cada nó da lista contém:
+
+\begin{itemize}
+    \item \textbf{ID}: Identificador único do aluno
+    \item \textbf{Nota}: Nota numérica do aluno (0-100)
+    \item \textbf{Ponteiro}: Referência para o próximo nó
+\end{itemize}
+
+\textbf{Vantagens:}
+\begin{itemize}
+    \item Tamanho dinâmico, ajustável conforme necessário
+    \item Inserções e remoções eficientes em posições arbitrárias
+    \item Não desperdiça memória com espaços pré-alocados não utilizados
+\end{itemize}
+
+\textbf{Desvantagens:}
+\begin{itemize}
+    \item Acesso sequencial obrigatório (sem acesso direto por índice)
+    \item Overhead de memória devido aos ponteiros
+    \item Possível fragmentação de memória
+    \item Localidade espacial de cache prejudicada
+\end{itemize}
+
+\subsubsection{Lista Encadeada Estática}
+
+A lista estática simula uma lista encadeada utilizando um vetor pré-alocado de tamanho fixo. Os "ponteiros" são implementados como índices inteiros do vetor, e uma lista de posições livres é mantida para gerenciar a reutilização de espaços.
+
+\textbf{Vantagens:}
+\begin{itemize}
+    \item Melhor localidade de cache (dados contíguos na memória)
+    \item Sem overhead de chamadas a \texttt{malloc/free}
+    \item Tempo de alocação previsível e constante
+    \item Acesso mais rápido devido à contiguidade da memória
+\end{itemize}
+
+\textbf{Desvantagens:}
+\begin{itemize}
+    \item Tamanho máximo fixo definido em tempo de compilação
+    \item Possível desperdício de memória se o vetor não for totalmente utilizado
+    \item Complexidade adicional no gerenciamento de índices livres
+\end{itemize}
+
+\subsubsection{Justificativa da Escolha}
+
+A implementação de ambas as estruturas permite avaliar empiricamente o trade-off entre flexibilidade e desempenho. A lista dinâmica oferece flexibilidade máxima, ideal para cenários onde o tamanho do dataset é imprevisível. Já a lista estática sacrifica flexibilidade em favor de desempenho, sendo ideal para aplicações críticas onde o limite superior de dados é conhecido.
+
+No contexto de aplicações reais (como sistemas de ranking), a escolha depende de fatores como:
+\begin{itemize}
+    \item Volume máximo esperado de dados
+    \item Frequência de inserções/remoções
+    \item Requisitos de latência
+    \item Restrições de memória do sistema
+\end{itemize}
+
+\subsection{Algoritmos de Ordenação Implementados}
+
+Cinco algoritmos clássicos de ordenação foram implementados e testados em ambas as estruturas de dados:
+
+\subsubsection{Bubble Sort}
+
+Algoritmo baseado em comparações sucessivas de elementos adjacentes, realizando trocas quando estão fora de ordem. Percorre a lista repetidamente até que nenhuma troca seja necessária.
+
+\textbf{Características:}
+\begin{itemize}
+    \item Algoritmo estável (mantém ordem relativa de elementos iguais)
+    \item In-place (não requer memória auxiliar significativa)
+    \item Simples de implementar
+    \item Ineficiente para grandes volumes de dados
+\end{itemize}
+
+\subsubsection{Selection Sort}
+
+A cada iteração, seleciona o menor elemento não ordenado e o posiciona em sua posição final. Divide conceitualmente a lista em duas partes: ordenada e não ordenada.
+
+\textbf{Características:}
+\begin{itemize}
+    \item Não estável na implementação padrão
+    \item In-place
+    \item Número fixo de trocas: $O(n)$
+    \item Útil quando o custo de troca é alto
+\end{itemize}
+
+\subsubsection{Insertion Sort}
+
+Constrói a lista ordenada incrementalmente, inserindo cada elemento na posição correta dentro da porção já ordenada.
+
+\textbf{Características:}
+\begin{itemize}
+    \item Algoritmo estável
+    \item In-place
+    \item Adaptativo (eficiente para dados quase ordenados)
+    \item Excelente para listas pequenas ou parcialmente ordenadas
+\end{itemize}
+
+\subsubsection{Quick Sort}
+
+Algoritmo de divisão e conquista que escolhe um pivô e particiona a lista em elementos menores e maiores que o pivô, ordenando recursivamente cada partição.
+
+\textbf{Características:}
+\begin{itemize}
+    \item Não estável na implementação padrão
+    \item In-place (considerando a pilha de recursão)
+    \item Geralmente o mais rápido na prática
+    \item Desempenho degradado no pior caso
+\end{itemize}
+
+\subsubsection{Merge Sort}
+
+Algoritmo de divisão e conquista que divide recursivamente a lista em sublistas menores, ordenando-as e mesclando os resultados.
+
+\textbf{Características:}
+\begin{itemize}
+    \item Algoritmo estável
+    \item Requer memória auxiliar $O(n)$
+    \item Desempenho consistente independente dos dados
+    \item Ideal para dados em armazenamento externo
+\end{itemize}
+
+\subsection{Algoritmo Ideal: Merge Sort}
+
+Para o contexto deste projeto, o \textbf{Merge Sort} foi selecionado como o algoritmo ideal, baseado nos seguintes critérios:
+
+\subsubsection{Garantia de Desempenho}
+
+O Merge Sort apresenta complexidade $O(n \log n)$ em \textbf{todos os casos} (melhor, médio e pior). Diferentemente do Quick Sort, que pode degradar para $O(n^2)$ no pior caso, o Merge Sort oferece previsibilidade de desempenho crucial para sistemas críticos.
+
+\subsubsection{Estabilidade}
+
+A propriedade de estabilidade é essencial em sistemas de ranking onde múltiplos critérios de ordenação podem ser aplicados sequencialmente. Ao ordenar primeiro por nota e depois por nome, o Merge Sort preserva a ordem relativa de alunos com mesma nota.
+
+\subsubsection{Funcionamento Detalhado}
+
+O algoritmo opera em três fases:
+
+\textbf{1. Divisão (Divide):}
+\begin{algorithmic}
+\IF{$n \leq 1$}
+    \RETURN
+\ENDIF
+\STATE $meio \gets n / 2$
+\STATE Divide lista em $L$ (primeira metade) e $R$ (segunda metade)
+\end{algorithmic}
+
+\textbf{2. Conquista (Conquer):}
+\begin{algorithmic}
+\STATE MergeSort($L$)
+\STATE MergeSort($R$)
+\end{algorithmic}
+
+\textbf{3. Combinação (Merge):}
+\begin{algorithmic}
+\STATE Inicializa lista auxiliar $A$
+\WHILE{$L$ não vazia \AND $R$ não vazia}
+    \IF{$L[0] \leq R[0]$}
+        \STATE Adiciona $L[0]$ em $A$ e remove de $L$
+    \ELSE
+        \STATE Adiciona $R[0]$ em $A$ e remove de $R$
+    \ENDIF
+\ENDWHILE
+\STATE Adiciona elementos restantes de $L$ ou $R$ em $A$
+\end{algorithmic}
+
+\textbf{Custo Espacial:}
+
+O principal trade-off do Merge Sort é o uso de memória auxiliar $O(n)$ para a fusão das sublistas. No entanto, este custo é aceitável considerando:
+\begin{itemize}
+    \item Memória moderna abundante em sistemas computacionais
+    \item Possibilidade de otimização para ordenação externa
+    \item Benefício da consistência de desempenho
+\end{itemize}
+
+\textbf{Adaptações para Listas Encadeadas:}
+
+Para listas encadeadas, o Merge Sort é particularmente eficiente pois:
+\begin{itemize}
+    \item A divisão pode ser feita alterando ponteiros (sem cópia de dados)
+    \item A fusão se torna naturalmente in-place através de religação de nós
+    \item Não sofre com o acesso sequencial, pois o acesso direto não é necessário
+\end{itemize}
+
+% ============================================================
+\section{Análise Teórica}
+% ============================================================
+
+Esta seção apresenta a análise assintótica de complexidade computacional dos cinco algoritmos implementados, considerando os cenários de melhor, médio e pior caso.
+
+\subsection{Notação Big-O e Análise de Complexidade}
+
+A notação Big-O descreve o comportamento assintótico de um algoritmo à medida que o tamanho da entrada $n$ cresce. As análises consideram:
+\begin{itemize}
+    \item \textbf{Complexidade de Tempo:} Número de operações elementares
+    \item \textbf{Complexidade de Espaço:} Memória auxiliar necessária
+\end{itemize}
+
+\subsection{Bubble Sort}
+
+\subsubsection{Melhor Caso: $O(n)$}
+
+Ocorre quando a lista já está ordenada. Com a otimização de flag de troca, o algoritmo detecta a ordenação após uma única passagem.
+
+\textbf{Análise:}
+\begin{equation}
+T_{melhor}(n) = n - 1 \text{ comparações} = O(n)
+\end{equation}
+
+\subsubsection{Caso Médio: $O(n^2)$}
+
+Para dados aleatórios, em média metade das comparações resulta em trocas.
+
+\textbf{Análise:}
+\begin{equation}
+T_{medio}(n) = \sum_{i=1}^{n-1} i = \frac{n(n-1)}{2} = O(n^2)
+\end{equation}
+
+\subsubsection{Pior Caso: $O(n^2)$}
+
+Ocorre quando a lista está inversamente ordenada. Toda comparação resulta em troca.
+
+\textbf{Análise:}
+\begin{equation}
+T_{pior}(n) = \sum_{i=1}^{n-1} i = \frac{n(n-1)}{2} = O(n^2)
+\end{equation}
+
+\textbf{Complexidade Espacial:} $O(1)$ - in-place
+
+\subsection{Selection Sort}
+
+\subsubsection{Todos os Casos: $O(n^2)$}
+
+O Selection Sort executa o mesmo número de comparações independentemente da configuração inicial dos dados.
+
+\textbf{Análise:}
+\begin{equation}
+T(n) = \sum_{i=1}^{n-1} (n-i) = \frac{n(n-1)}{2} = O(n^2)
+\end{equation}
+
+\textbf{Justificativa:}
+Para cada posição $i$, o algoritmo deve percorrer os $(n-i)$ elementos restantes para encontrar o mínimo, resultando sempre em $\frac{n(n-1)}{2}$ comparações.
+
+\textbf{Número de Trocas:}
+Diferentemente de Bubble Sort, o número de trocas é sempre $O(n)$ (no máximo uma por posição), tornando-o vantajoso quando o custo de troca é significativamente maior que o de comparação.
+
+\textbf{Complexidade Espacial:} $O(1)$ - in-place
+
+\subsection{Insertion Sort}
+
+\subsubsection{Melhor Caso: $O(n)$}
+
+Ocorre quando a lista já está ordenada. Cada elemento requer apenas uma comparação.
+
+\textbf{Análise:}
+\begin{equation}
+T_{melhor}(n) = n - 1 \text{ comparações} = O(n)
+\end{equation}
+
+\subsubsection{Caso Médio: $O(n^2)$}
+
+Para dados aleatórios, cada elemento é inserido, em média, no meio da porção ordenada.
+
+\textbf{Análise:}
+\begin{equation}
+T_{medio}(n) = \sum_{i=1}^{n-1} \frac{i}{2} = \frac{n(n-1)}{4} = O(n^2)
+\end{equation}
+
+\subsubsection{Pior Caso: $O(n^2)$}
+
+Ocorre quando a lista está inversamente ordenada. Cada elemento deve ser comparado com todos os anteriores.
+
+\textbf{Análise:}
+\begin{equation}
+T_{pior}(n) = \sum_{i=1}^{n-1} i = \frac{n(n-1)}{2} = O(n^2)
+\end{equation}
+
+\textbf{Propriedade Adaptativa:}
+
+O Insertion Sort é adaptativo, ou seja, seu desempenho melhora significativamente para dados parcialmente ordenados. Para uma lista com $k$ inversões:
+\begin{equation}
+T(n) = O(n + k)
+\end{equation}
+
+\textbf{Complexidade Espacial:} $O(1)$ - in-place
+
+\subsection{Quick Sort}
+
+\subsubsection{Melhor Caso: $O(n \log n)$}
+
+Ocorre quando o pivô divide consistentemente a lista em duas partes aproximadamente iguais.
+
+\textbf{Análise:}
+Profundidade da recursão: $\log_2 n$\\
+Trabalho por nível: $O(n)$ (particionamento)
+\begin{equation}
+T_{melhor}(n) = O(n) \times \log_2 n = O(n \log n)
+\end{equation}
+
+\subsubsection{Caso Médio: $O(n \log n)$}
+
+Para dados aleatórios, o pivô divide a lista em proporções variadas, mas a profundidade esperada permanece $O(\log n)$.
+
+\textbf{Análise (Relação de Recorrência):}
+\begin{equation}
+T(n) = T(k) + T(n-k-1) + O(n)
+\end{equation}
+onde $k$ é o número de elementos menores que o pivô.
+
+Para pivô mediano (caso esperado):
+\begin{equation}
+T_{medio}(n) = 2T(n/2) + O(n) = O(n \log n)
+\end{equation}
+
+\subsubsection{Pior Caso: $O(n^2)$}
+
+Ocorre quando o pivô é sempre o menor ou maior elemento (lista já ordenada ou inversamente ordenada com pivô ingênuo).
+
+\textbf{Análise:}
+Profundidade da recursão: $n$\\
+Partições extremamente desbalanceadas
+\begin{equation}
+T_{pior}(n) = T(n-1) + O(n) = \sum_{i=1}^{n} i = O(n^2)
+\end{equation}
+
+\textbf{Estratégias de Mitigação:}
+\begin{itemize}
+    \item Escolha aleatória de pivô: reduz probabilidade do pior caso
+    \item Mediana-de-três: pivô = mediana(primeiro, meio, último)
+    \item Hybrid approach: usar Insertion Sort para sublistas pequenas
+\end{itemize}
+
+\textbf{Complexidade Espacial:} $O(\log n)$ (pilha de recursão no caso médio), $O(n)$ no pior caso
+
+\subsection{Merge Sort}
+
+\subsubsection{Todos os Casos: $O(n \log n)$}
+
+O Merge Sort apresenta complexidade consistente independente da configuração dos dados.
+
+\textbf{Análise (Relação de Recorrência):}
+\begin{equation}
+T(n) = 2T(n/2) + O(n)
+\end{equation}
+
+Aplicando o Teorema Mestre (Caso 2):
+\begin{equation}
+T(n) = O(n \log n)
+\end{equation}
+
+\textbf{Demonstração Detalhada:}
+
+Profundidade da árvore de recursão: $\log_2 n$\\
+Trabalho por nível: $O(n)$ (fusão de todas as sublistas)
+
+Nível 0: $n$ elementos em 1 lista\\
+Nível 1: $n$ elementos em 2 listas\\
+Nível 2: $n$ elementos em 4 listas\\
+...\\
+Nível $\log n$: $n$ elementos em $n$ listas
+
+\begin{equation}
+T(n) = \sum_{i=0}^{\log n} n = n \times (\log n + 1) = O(n \log n)
+\end{equation}
+
+\textbf{Invariância do Desempenho:}
+
+O Merge Sort sempre divide a lista ao meio, independente dos valores. Portanto:
+\begin{align}
+T_{melhor}(n) &= O(n \log n) \\
+T_{medio}(n) &= O(n \log n) \\
+T_{pior}(n) &= O(n \log n)
+\end{align}
+
+\textbf{Complexidade Espacial:} $O(n)$ - requer array auxiliar para fusão
+
+\subsection{Comparação Teórica}
+
+A Tabela \ref{tab:complexidade} resume as complexidades dos cinco algoritmos:
+
+\begin{table}[h]
+\centering
+\caption{Complexidade de Tempo dos Algoritmos de Ordenação}
+\label{tab:complexidade}
+\begin{tabular}{|l|c|c|c|}
+\hline
+\textbf{Algoritmo} & \textbf{Melhor} & \textbf{Médio} & \textbf{Pior} \\
+\hline
+Bubble Sort & $O(n)$ & $O(n^2)$ & $O(n^2)$ \\
+Selection Sort & $O(n^2)$ & $O(n^2)$ & $O(n^2)$ \\
+Insertion Sort & $O(n)$ & $O(n^2)$ & $O(n^2)$ \\
+Quick Sort & $O(n \log n)$ & $O(n \log n)$ & $O(n^2)$ \\
+Merge Sort & $O(n \log n)$ & $O(n \log n)$ & $O(n \log n)$ \\
+\hline
+\end{tabular}
+\end{table}
+
+\subsection{Considerações Teóricas}
+
+\subsubsection{Algoritmos $O(n^2)$}
+
+Os três primeiros algoritmos (Bubble, Selection, Insertion) compartilham complexidade quadrática no caso médio e pior, mas apresentam diferenças práticas importantes:
+
+\begin{itemize}
+    \item \textbf{Insertion Sort} é adaptativo e eficiente para dados parcialmente ordenados
+    \item \textbf{Selection Sort} minimiza o número de trocas (útil quando trocas são custosas)
+    \item \textbf{Bubble Sort} é raramente usado na prática devido à sua ineficiência geral
+\end{itemize}
+
+\subsubsection{Algoritmos $O(n \log n)$}
+
+Os algoritmos eficientes apresentam trade-offs distintos:
+
+\begin{itemize}
+    \item \textbf{Merge Sort:} Consistente e estável, mas requer $O(n)$ de espaço
+    \item \textbf{Quick Sort:} Mais rápido na prática (boas constantes), mas instável e pode degradar para $O(n^2)$
+\end{itemize}
+
+\subsubsection{Limite Inferior Teórico}
+
+Qualquer algoritmo de ordenação baseado em comparações requer pelo menos:
+\begin{equation}
+\Omega(n \log n) \text{ comparações no pior caso}
+\end{equation}
+
+\textbf{Prova (Informação Teórica):}
+
+Existem $n!$ permutações possíveis de $n$ elementos. Uma árvore de decisão binária requer profundidade mínima de:
+\begin{equation}
+h \geq \log_2(n!) = \Omega(n \log n)
+\end{equation}
+
+Portanto, Merge Sort e Quick Sort (caso médio) são assintoticamente ótimos.
+
+\subsection{Implicações Práticas}
+
+\subsubsection{Escolha do Algoritmo}
+
+A seleção do algoritmo ideal depende de múltiplos fatores:
+
+\begin{enumerate}
+    \item \textbf{Tamanho do Dataset:}
+    \begin{itemize}
+        \item $n < 50$: Insertion Sort (simplicidade e overhead baixo)
+        \item $n$ médio/grande: Quick Sort ou Merge Sort
+    \end{itemize}
+    
+    \item \textbf{Requisitos de Estabilidade:}
+    \begin{itemize}
+        \item Necessária: Merge Sort ou Insertion Sort
+        \item Dispensável: Quick Sort (melhor desempenho prático)
+    \end{itemize}
+    
+    \item \textbf{Restrições de Memória:}
+    \begin{itemize}
+        \item Crítica: Quick Sort ou algoritmos in-place
+        \item Flexível: Merge Sort
+    \end{itemize}
+    
+    \item \textbf{Características dos Dados:}
+    \begin{itemize}
+        \item Parcialmente ordenados: Insertion Sort
+        \item Aleatórios: Quick Sort
+        \item Distribuição desconhecida: Merge Sort (garantia de desempenho)
+    \end{itemize}
+\end{enumerate}
+
+\subsubsection{Otimizações Híbridas}
+
+Na prática, bibliotecas de ordenação modernas utilizam abordagens híbridas:
+
+\begin{itemize}
+    \item \textbf{Introsort (C++ std::sort):} Quick Sort com fallback para Heap Sort quando detecta $O(n^2)$
+    \item \textbf{Timsort (Python, Java):} Merge Sort adaptativo que explora sequências ordenadas
+    \item \textbf{Hybrid Quick/Insertion:} Quick Sort para partições grandes, Insertion para pequenas
+\end{itemize}
+
+% ============================================================
+% Conclusão desta seção (se necessária)
+% ============================================================
+
+As análises teóricas apresentadas fornecem a base para a compreensão dos resultados experimentais que serão apresentados nas seções subsequentes. A confirmação empírica das complexidades teóricas, bem como a avaliação do impacto das estruturas de dados, são objetivos centrais deste trabalho.
+
+\end{document}
