@@ -1,4 +1,4 @@
-#include <stdio.h>
+﻿#include <stdio.h>
 #include <stdlib.h>
 #include "csv_io.h"
 
@@ -27,7 +27,7 @@ void salvar_resultados_csv(const char *nome_arquivo, ResultadoTempo *resultados,
     }
     
     fclose(arquivo);
-    printf("\n✅ Resultados salvos em: %s\n", nome_arquivo);
+    printf("\n Resultados salvos em: %s\n", nome_arquivo);
 }
 
 /**

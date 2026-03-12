@@ -1,4 +1,4 @@
-from gerador import (
+from analise import (
     configurar_seed,
     gerar_dados_aleatorios,
     gerar_dados_ordenados,
