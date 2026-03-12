@@ -1,36 +1,37 @@
-# 📊 Projeto: Ranking de Alunos e Análise de Algoritmos
+# Projeto: Ranking de Alunos e Análise de Algoritmos
 
 > Trabalho da disciplina de Estrutura de Dados - Engenharia de Software (UFCA).
 
 Este projeto consiste na implementação e análise comparativa de desempenho de **5 Algoritmos de Ordenação** aplicados sobre duas estruturas de dados distintas: **Lista Encadeada Dinâmica** e **Lista Encadeada Estática**.
 
-O objetivo é gerenciar um ranking de alunos (ID e Nota) e medir o tempo de execução (em ms/ns) para diferentes volumes de dados e cenários de ordenação.
+O objetivo é gerenciar um ranking de alunos (ID e Nota) e medir o tempo de execução (em milissegundos) para diferentes volumes de dados e cenários de ordenação.
 
-## 👥 Equipe e Responsabilidades
+## Equipe e Responsabilidades
 
-| Integrante | Algoritmo (Core) | Responsabilidade Extra |
-| :--- | :--- | :--- |
-| **Rayan** | Bubble Sort | Implementação da **Lista Estática** |
-| **Samuel** | Selection Sort | Implementação da **Lista Dinâmica** |
-| **Diogo** | Insertion Sort | Gerador de Dados, Menu e Integração |
-| **Junio** | Quick Sort | Análise Teórica e Complexidade |
-| **Pedro** | Merge Sort | Script de Análise de Dados (Python) |
-| **Lucas** | Merge Sort (Support) | Sistema de Benchmarking, Documentação e Slides |
+| Integrante | Algoritmo Principal | Responsabilidade Extra |
+|------------|---------------------|------------------------|
+| **Elder Rayan** | Bubble Sort | Implementação da **Lista Estática** |
+| **Samuel Wagner** | Selection Sort | Implementação da **Lista Dinâmica** |
+| **Diogo Gomes** | Insertion Sort | Gerador de Dados, Menu e Integração |
+| **Manoel Junio** | Quick Sort | Análise Teórica e Complexidade |
+| **Pedro Yan** | Merge Sort | Script de Análise de Dados (Python) |
+| **Antonio Neto** | Quick Sort (Suporte) | Sistema de Benchmarking, Documentação e Slides |
 
-## 🛠️ Tecnologias Utilizadas
+## Tecnologias Utilizadas
 
-* **Linguagem C:** Implementação das estruturas de dados e algoritmos de ordenação.
-* **Python (Pandas/Matplotlib):** Geração de gráficos a partir dos logs de execução (.csv).
-* **GCC:** Compilador padrão utilizado.
+* **Linguagem C:** Implementação das estruturas de dados e algoritmos de ordenação
+* **Python:** Scripts para análise de dados e geração de gráficos (pandas, matplotlib)
+* **LaTeX:** Documentação acadêmica no formato IEEE
+* **GCC/Make:** Sistema de compilação
 
-## 📂 Estrutura do Projeto
+## Estrutura do Projeto
 
 ```text
 ├── src/
-│   ├── main.c           # Menu principal e loop de testes
+│   ├── main.c                  # Menu principal e sistema de testes
 │   ├── listas/
-│   │   ├── dinamica.c   # Implementação com ponteiros (malloc/free)
-│   │   └── estatica.c   # Implementação com vetor pré-alocado
+│   │   ├── dinamica.c          # Lista encadeada com alocação dinâmica
+│   │   └── estatica.c          # Lista encadeada com vetor pré-alocado
 │   ├── algoritmos/
 │   │   ├── bubble.c
 │   │   ├── insertion.c
@@ -38,77 +39,167 @@ O objetivo é gerenciar um ranking de alunos (ID e Nota) e medir o tempo de exec
 │   │   ├── quick.c
 │   │   └── merge.c
 │   └── utils/
-│       ├── gerador.c    # Gera dados (Aleatório, Ordenado, Inverso)
-│       └── timer.c      # Medição de tempo e exportação CSV
-├── include/             # Arquivos de cabeçalho (.h)
-├── scripts/
-│   └── analise.py       # Script Python para gerar os gráficos
-├── docs/                # Documentação, Artigo IEEE e Slides
-├── resultados.csv       # Arquivo gerado automaticamente após execução
+│       ├── gerador.c           # Gerador de dados de teste
+│       ├── timer.c             # Sistema de medição de tempo
+│       ├── csv_io.c            # Exportação de resultados em CSV
+│       └── merge_utils.c       # Funções auxiliares do Merge Sort
+├── include/                    # Headers (.h)
+├── tests/                      # Testes unitários e de performance
+│   ├── teste_performance.c     # Sistema de benchmarking
+│   ├── teste_bubble.c
+│   ├── teste_insertion.c
+│   ├── teste_selection.c
+│   ├── teste_merge.c
+│   └── testes_manuais.c
+├── scripts/                    # Scripts Python
+│   ├── menu.py                 # Interface de menu Python
+│   ├── analise.py              # Gerador de dados
+│   └── analise_performance_simples.py  # Análise estatística básica
+├── docs/
+│   ├── Trabalho.md             # Especificação do trabalho
+│   └── artigo_desenvolvimento_analise.tex  # Artigo IEEE em LaTeX
+├── makefile                    # Sistema de build
+├── performance.md              # Documentação do sistema de medição
 └── README.md
 ```
 
-## ⚙️ Funcionalidades
+## Funcionalidades
 
 1. **Estruturas de Dados**
-   * **Lista Dinâmica:** Alocação de memória sob demanda.
-   * **Lista Estática:** Vetor com gerenciamento manual de índices livres.
+   * **Lista Dinâmica:** Alocação de memória sob demanda usando malloc/free
+   * **Lista Estática:** Vetor pré-alocado com gerenciamento manual de índices livres
 
 2. **Algoritmos de Ordenação**
-   * Todos os algoritmos abaixo foram testados nos cenários de **Melhor Caso** (já ordenado), **Caso Médio** (aleatório) e **Pior Caso** (inversamente ordenado):
-     * Bubble Sort
-     * Insertion Sort
-     * Selection Sort
-     * Quick Sort
-     * Merge Sort
+   
+   Implementação completa de 5 algoritmos testados em três cenários:
+   * **Melhor Caso:** Dados já ordenados
+   * **Caso Médio:** Dados aleatórios
+   * **Pior Caso:** Dados inversamente ordenados
+   
+   Algoritmos implementados:
+   * Bubble Sort
+   * Insertion Sort
+   * Selection Sort
+   * Quick Sort
+   * Merge Sort
 
-3. **Cenários de Teste**
-   * Volumes de dados testados: `100`, `1.000` e `10.000` registros.
+3. **Sistema de Medição de Performance**
+   * Medição precisa de tempo usando clock()
+   * 100 repetições por configuração para garantir confiabilidade estatística
+   * Exportação automática de resultados em formato CSV
+   * Suporte a múltiplos tamanhos de entrada: 100, 1.000, 10.000 elementos
 
----
+4. **Análise e Documentação**
+   * Artigo acadêmico em LaTeX (formato IEEE)
+   * Análise teórica de complexidade Big-O
+   * Scripts Python para análise estatística
 
-## 🚀 Como Executar
+## Como Executar
 
 ### Pré-requisitos
-* Compilador C (GCC)
-* Python 3 + Bibliotecas (para os gráficos):
+
+* **Compilador C:** GCC ou compatível
+* **Make:** Para usar o sistema de build automatizado
+* **Python 3.x:** (Opcional) Para análise estatística
+  ```bash
+  pip install pandas matplotlib
+  ```
+
+### Compilação
+
+#### Usando Make (Recomendado)
 
 ```bash
-pip install pandas matplotlib seaborn
-```
-
-# Passo 1: Compilar e Rodar (Linguagem C)
-
-No terminal, navegue até a raiz do projeto e compile:
-```bash
-# Compilação simples (exemplo)
-gcc src/main.c src/listas/*.c src/algoritmos/*.c src/utils/*.c -I include -o ranking_app
+# Compilar o programa principal
+make
 
 # Executar
-./ranking_app
+./programa.exe
 ```
 
-Ao executar, selecione a opção "Rodar Benchmarking Completo". O programa executará os 100 testes exigidos e gerará o arquivo `resultados.csv` na raiz.
+#### Compilação Manual
 
-# Passo 2: Gerar Gráficos (Python)
-
-Após gerar o CSV, execute o script de análise:
 ```bash
-python scripts/analise.py
+gcc src/main.c src/listas/*.c src/algoritmos/*.c src/utils/*.c -I include -o programa.exe
+
+# Executar
+./programa.exe
 ```
 
-Os gráficos comparativos serão salvos na pasta `docs/graficos/`.
+### Uso do Programa
 
-# 📈 Metodologia de Avaliação
+O programa oferece as seguintes opções principais:
 
-A métrica principal é o **Tempo de Execução**, excluindo o tempo de geração dos dados e input/output. Cada experimento é repetido 100 vezes, e a média aritmética é utilizada para os gráficos finais, garantindo confiabilidade estatística.
+1. **Testes Manuais:** Testa algoritmos individualmente com dados pequenos
+2. **Testes de Performance:** Executa benchmarking completo com 100 repetições
+3. **Exportação CSV:** Gera arquivos de resultados para análise posterior
 
-# 📄 Entregáveis
+Exemplo de uso:
+```
+Menu Principal:
+1. Testar Bubble Sort
+2. Testar Selection Sort
+...
+8. Performance: Bubble Sort (100 execuções)
+12. Performance: Todos os Algoritmos
+...
+```
 
-* Código Fonte em C.
-* Artigo formatado (IEEE) com análise teórica e empírica.
-* Apresentação de slides para defesa.
+### Análise de Resultados (Opcional)
 
-Projeto desenvolvido para a **Universidade Federal do Cariri (UFCA)**.
+Após executar os testes de performance, você pode usar os scripts Python para análise:
+
+```bash
+# Análise estatística simples
+python scripts/analise_performance_simples.py
+
+# Menu interativo Python
+python scripts/menu.py
+```
+
+Os arquivos CSV gerados seguem o formato:
+```
+Algoritmo,Tipo_Lista,Tipo_Dados,Tamanho,Tempo_ms
+Bubble Sort,Vetor,Aleatório,1000,15.2345
+...
+```
+
+## Metodologia de Avaliação
+
+A métrica principal é o **Tempo de Execução** medido em milissegundos, excluindo o tempo de:
+* Geração dos dados
+* Operações de entrada/saída
+* Impressão de resultados
+
+Cada experimento é repetido **100 vezes**, e a **média aritmética** é calculada para garantir confiabilidade estatística e minimizar variações causadas por fatores externos.
+
+### Cenários de Teste
+
+| Tamanho | Tipo de Dados | Propósito |
+|---------|---------------|-----------|
+| 100 elementos | Aleatório, Ordenado, Invertido | Caso pequeno |
+| 1.000 elementos | Aleatório, Ordenado, Invertido | Caso médio |
+| 10.000 elementos | Aleatório, Ordenado, Invertido | Caso grande |
+
+## Documentação Adicional
+
+* **performance.md:** Detalhes do sistema de medição de tempo
+* **docs/Trabalho.md:** Especificação completa do trabalho
+* **docs/artigo_desenvolvimento_analise.tex:** Artigo acadêmico com análise teórica e complexidade Big-O
+
+## Entregáveis
+
+* Código-fonte completo em C
+* Artigo formatado no padrão IEEE com análise teórica e empírica
+* Apresentação de slides para defesa
+* Resultados experimentais em formato CSV
+
+## Licença
+
+Este projeto foi desenvolvido para fins acadêmicos na **Universidade Federal do Cariri (UFCA)**.
 
 ---
+
+**Disciplina:** Estrutura de Dados  
+**Curso:** Engenharia de Software  
+**Instituição:** UFCA
