@@ -7,13 +7,17 @@
 \usepackage{graphicx}
 \usepackage{cite}
 \usepackage{url}
+\usepackage{enumitem}
+
+\setlist[itemize]{itemsep=3pt, parsep=3pt, topsep=3pt}
 
 \begin{document}
 
 \title{Análise Comparativa de Algoritmos de Ordenação em Estruturas de Dados Dinâmicas e Estáticas}
 
 \author{
-\IEEEauthorblockN{Rayan, Samuel, Diogo, Junio, Pedro, Lucas}
+\IEEEauthorblockN{Elder Rayan Oliveira Silva, Samuel Wagner Tiburi Silveira, Diogo Gomes Figueiredo, \\
+Manoel Junio Duarte da Silva, Pedro Yan Alcantara Palácio, Antonio Pereira da Luz Neto}
 \IEEEauthorblockA{
 Universidade Federal do Cariri - UFCA\\
 Engenharia de Software\\
@@ -23,6 +27,10 @@ Disciplina: Estrutura de Dados\\
 
 \maketitle
 
+\section{Introdução}
+
+Em produção.
+
 % ============================================================
 \section{Desenvolvimento}
 % ============================================================
@@ -31,7 +39,7 @@ Esta seção descreve a implementação prática do sistema de ranking de alunos
 
 \subsection{Estruturas de Dados}
 
-Para avaliar o impacto da organização da memória no desempenho dos algoritmos, foram implementadas duas estruturas de dados distintas para armazenar o ranking de alunos:
+Para avaliar o impacto da organização da memória no desempenho dos algoritmos, foram implementadas duas estruturas de dados distintas para armazenar o ranking de alunos, ambas utilizando o conceito de \textbf{lista duplamente encadeada}:
 
 \subsubsection{Lista Encadeada Dinâmica}
 
@@ -40,27 +48,28 @@ A lista dinâmica utiliza alocação de memória sob demanda, através das funç
 \begin{itemize}
     \item \textbf{ID}: Identificador único do aluno
     \item \textbf{Nota}: Nota numérica do aluno (0-100)
-    \item \textbf{Ponteiro}: Referência para o próximo nó
+    \item \textbf{Ponteiros}: Referências para o próximo e para o nó anterior (\texttt{prox} e \texttt{ant})
 \end{itemize}
 
 \textbf{Vantagens:}
 \begin{itemize}
     \item Tamanho dinâmico, ajustável conforme necessário
     \item Inserções e remoções eficientes em posições arbitrárias
+    \item Navegação bidirecional facilitada pela estrutura duplamente encadeada
     \item Não desperdiça memória com espaços pré-alocados não utilizados
 \end{itemize}
 
 \textbf{Desvantagens:}
 \begin{itemize}
     \item Acesso sequencial obrigatório (sem acesso direto por índice)
-    \item Overhead de memória devido aos ponteiros
+    \item Overhead de memória devido ao dobro de ponteiros por nó
     \item Possível fragmentação de memória
     \item Localidade espacial de cache prejudicada
 \end{itemize}
 
 \subsubsection{Lista Encadeada Estática}
 
-A lista estática simula uma lista encadeada utilizando um vetor pré-alocado de tamanho fixo. Os "ponteiros" são implementados como índices inteiros do vetor, e uma lista de posições livres é mantida para gerenciar a reutilização de espaços.
+A lista estática simula uma lista duplamente encadeada utilizando um vetor pré-alocado de tamanho fixo. Os "ponteiros" são implementados como índices inteiros do vetor (\texttt{prox} e \texttt{ant}), e uma lista de posições livres é mantida para gerenciar a reutilização de espaços.
 
 \textbf{Vantagens:}
 \begin{itemize}
@@ -415,6 +424,7 @@ A Tabela \ref{tab:complexidade} resume as complexidades dos cinco algoritmos:
 \centering
 \caption{Complexidade de Tempo dos Algoritmos de Ordenação}
 \label{tab:complexidade}
+\renewcommand{\arraystretch}{1.3}
 \begin{tabular}{|l|c|c|c|}
 \hline
 \textbf{Algoritmo} & \textbf{Melhor} & \textbf{Médio} & \textbf{Pior} \\
@@ -477,19 +487,19 @@ A seleção do algoritmo ideal depende de múltiplos fatores:
         \item $n < 50$: Insertion Sort (simplicidade e overhead baixo)
         \item $n$ médio/grande: Quick Sort ou Merge Sort
     \end{itemize}
-    
+
     \item \textbf{Requisitos de Estabilidade:}
     \begin{itemize}
         \item Necessária: Merge Sort ou Insertion Sort
         \item Dispensável: Quick Sort (melhor desempenho prático)
     \end{itemize}
-    
+
     \item \textbf{Restrições de Memória:}
     \begin{itemize}
         \item Crítica: Quick Sort ou algoritmos in-place
         \item Flexível: Merge Sort
     \end{itemize}
-    
+
     \item \textbf{Características dos Dados:}
     \begin{itemize}
         \item Parcialmente ordenados: Insertion Sort
