@@ -3,6 +3,12 @@
 #include "testes_manuais.h"
 #include "estatica.h"
 
+/**
+ * @brief Executa testes manuais da implementacao de lista estatica.
+ *
+ * O fluxo cobre inicializacao, insercao, busca, remocao e validacao final
+ * de estado por meio de impressao em tela.
+ */
 void executar_testes_lista_estatica() {
     ListaEstatica lista;
     
@@ -92,6 +98,12 @@ void executar_testes_lista_estatica() {
     printf("\n=== TESTE CONCLUIDO ===\n");
 }
 
+/**
+ * @brief Executa testes manuais da implementacao de lista dinamica.
+ *
+ * O fluxo cobre insercoes, buscas, remocoes em diferentes posicoes,
+ * tentativa de remocao inexistente e reuso da lista apos esvaziamento.
+ */
 void executar_testes_lista_dinamica() {
     // Fluxo para testar implementações
     ListaDinamica *lista_dinamica = lista_dinamica_inicializa();
