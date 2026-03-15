@@ -1,3 +1,11 @@
+"""Utilitarios para gerar massas de dados e criar graficos de desempenho.
+
+Este modulo concentra:
+- geracao de dados sinteticos (aleatorio, ordenado e invertido);
+- carregamento robusto de resultados CSV com nomes de colunas flexiveis;
+- geracao automatica de graficos para comparacao de algoritmos.
+"""
+
 import random
 from pathlib import Path
 import unicodedata
@@ -9,11 +17,24 @@ import seaborn as sns
 SEED = None
 
 def configurar_seed():
+    """Configura a semente global do modulo, quando definida.
+
+    Se `SEED` estiver como `None`, mantem o comportamento pseudoaleatorio
+    padrao do Python.
+    """
     if SEED is not None:
         random.seed(SEED)
 
 
 def gerar_dados_aleatorios(n):
+    """Gera pares (id, nota) com notas aleatorias no intervalo [0, 100].
+
+    Args:
+        n: quantidade de registros.
+
+    Returns:
+        Lista de tuplas no formato (id, nota).
+    """
     dados = []
     for i in range(1, n + 1):
         nota = round(random.uniform(0, 100), 2)
@@ -22,6 +43,14 @@ def gerar_dados_aleatorios(n):
 
 
 def gerar_dados_ordenados(n):
+    """Gera pares (id, nota) em ordem crescente de nota.
+
+    Args:
+        n: quantidade de registros.
+
+    Returns:
+        Lista de tuplas ordenadas por nota crescente.
+    """
     dados = []
     passo = 100 / max(n, 1)
 
@@ -33,6 +62,14 @@ def gerar_dados_ordenados(n):
 
 
 def gerar_dados_invertidos(n):
+    """Gera pares (id, nota) em ordem decrescente de nota.
+
+    Args:
+        n: quantidade de registros.
+
+    Returns:
+        Lista de tuplas representando um caso invertido.
+    """
     dados = []
     passo = 100 / max(n, 1)
 
@@ -44,6 +81,11 @@ def gerar_dados_invertidos(n):
 
 
 def _normalizar_texto(valor):
+    """Normaliza texto para comparacoes tolerantes a variacoes.
+
+    Remove espacos extras, converte para minusculas e remove acentos.
+    Valores nulos viram string vazia.
+    """
     if pd.isna(valor):
         return ""
     texto = str(valor).strip().lower()
@@ -53,6 +95,15 @@ def _normalizar_texto(valor):
 
 
 def _resolver_coluna(df, opcoes):
+    """Resolve o nome real de uma coluna a partir de nomes candidatos.
+
+    Args:
+        df: DataFrame de entrada.
+        opcoes: nomes possiveis para a mesma coluna logica.
+
+    Returns:
+        Nome real da coluna em `df` ou `None` se nao encontrada.
+    """
     mapa = {_normalizar_texto(col): col for col in df.columns}
     for opcao in opcoes:
         chave = _normalizar_texto(opcao)
@@ -62,6 +113,21 @@ def _resolver_coluna(df, opcoes):
 
 
 def carregar_resultados(caminho_csv="resultados.csv"):
+    """Carrega e padroniza o CSV de resultados de performance.
+
+    A funcao aceita variantes de nomes de colunas e retorna um DataFrame
+    com esquema padrao para consumo dos graficos.
+
+    Args:
+        caminho_csv: caminho para o arquivo CSV.
+
+    Returns:
+        DataFrame com colunas padronizadas, incluindo normalizacoes auxiliares.
+
+    Raises:
+        FileNotFoundError: quando o arquivo nao existe.
+        ValueError: quando faltam colunas obrigatorias.
+    """
     caminho = Path(caminho_csv)
     if not caminho.exists():
         raise FileNotFoundError(f"Arquivo nao encontrado: {caminho_csv}")
@@ -121,6 +187,10 @@ def carregar_resultados(caminho_csv="resultados.csv"):
 
 
 def _filtro_aleatorio(df):
+    """Prioriza registros de caso medio/aleatorio quando disponiveis.
+
+    Se nenhum rotulo equivalente for encontrado, retorna o DataFrame original.
+    """
     if "Tipo_Entrada_norm" not in df.columns:
         return df
 
@@ -133,6 +203,15 @@ def _filtro_aleatorio(df):
 
 
 def gerar_grafico_1_comparacao_geral(df, pasta_saida):
+    """Gera o grafico de barras com comparacao geral para N=10.000.
+
+    Args:
+        df: DataFrame padronizado com resultados.
+        pasta_saida: diretorio onde o arquivo sera salvo.
+
+    Returns:
+        Caminho do arquivo PNG gerado.
+    """
     dados = df[df["Tamanho"] == 10000]
     dados = _filtro_aleatorio(dados)
     if dados.empty:
@@ -158,6 +237,17 @@ def gerar_grafico_1_comparacao_geral(df, pasta_saida):
 
 
 def gerar_grafico_2_curva_crescimento(df, pasta_saida):
+    """Gera o grafico de linha da curva de crescimento dos algoritmos.
+
+    Usa os tamanhos 100, 1000 e 10000 para comparar evolucao de tempo.
+
+    Args:
+        df: DataFrame padronizado com resultados.
+        pasta_saida: diretorio onde o arquivo sera salvo.
+
+    Returns:
+        Caminho do arquivo PNG gerado.
+    """
     tamanhos_alvo = [100, 1000, 10000]
     dados = df[df["Tamanho"].isin(tamanhos_alvo)]
     dados = _filtro_aleatorio(dados)
@@ -194,6 +284,18 @@ def gerar_grafico_2_curva_crescimento(df, pasta_saida):
 
 
 def gerar_grafico_3_comparativo_estrutural(df, pasta_saida):
+    """Gera comparativo Dinamica vs Estatica para um algoritmo elegivel.
+
+    Seleciona automaticamente o primeiro algoritmo (ordem alfabetica) que
+    possua resultados para as duas estruturas.
+
+    Args:
+        df: DataFrame padronizado com resultados.
+        pasta_saida: diretorio onde o arquivo sera salvo.
+
+    Returns:
+        Caminho do arquivo PNG gerado.
+    """
     if "Estrutura" not in df.columns:
         raise ValueError("CSV sem coluna de estrutura para o Grafico 3.")
 
@@ -231,6 +333,12 @@ def gerar_grafico_3_comparativo_estrutural(df, pasta_saida):
 
 
 def gerar_todos_graficos(caminho_csv="resultados.csv", pasta_saida="docs/graficos"):
+    """Executa a geracao de todos os graficos e reporta sucessos/erros.
+
+    Args:
+        caminho_csv: caminho do CSV com os resultados.
+        pasta_saida: pasta de destino dos arquivos de imagem.
+    """
     sns.set_theme(style="whitegrid")
 
     df = carregar_resultados(caminho_csv)
