@@ -120,7 +120,7 @@ make
 #### Compilação Manual
 
 ```bash
-gcc src/main.c src/listas/*.c src/algoritmos/*.c src/utils/*.c -I include -o programa.exe
+gcc src/main.c src/listas/*.c src/algoritmos/*.c src/utils/*.c tests/*.c -I include -o ranking_app
 
 # Executar
 ./programa.exe
