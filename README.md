@@ -102,7 +102,7 @@ O objetivo é gerenciar um ranking de alunos (ID e Nota) e medir o tempo de exec
 * **Make:** Para usar o sistema de build automatizado
 * **Python 3.x:** (Opcional) Para análise estatística
   ```bash
-  pip install pandas matplotlib
+  pip install -r scripts/requirements.txt
   ```
 
 ### Compilação
@@ -114,7 +114,7 @@ O objetivo é gerenciar um ranking de alunos (ID e Nota) e medir o tempo de exec
 make
 
 # Executar
-./programa.exe
+./ranking_app
 ```
 
 #### Compilação Manual
@@ -123,7 +123,7 @@ make
 gcc src/main.c src/listas/*.c src/algoritmos/*.c src/utils/*.c tests/*.c -I include -o ranking_app
 
 # Executar
-./programa.exe
+./ranking_app
 ```
 
 ### Uso do Programa

@@ -238,13 +238,27 @@ def gerar_todos_graficos(caminho_csv="resultados.csv", pasta_saida="docs/grafico
     saida.mkdir(parents=True, exist_ok=True)
 
     gerados = []
-    gerados.append(gerar_grafico_1_comparacao_geral(df, saida))
-    gerados.append(gerar_grafico_2_curva_crescimento(df, saida))
-    gerados.append(gerar_grafico_3_comparativo_estrutural(df, saida))
+    erros = []
 
-    print("Graficos gerados com sucesso:")
-    for arquivo in gerados:
-        print(f"- {arquivo}")
+    for gerar in [
+        gerar_grafico_1_comparacao_geral,
+        gerar_grafico_2_curva_crescimento,
+        gerar_grafico_3_comparativo_estrutural,
+    ]:
+        try:
+            gerados.append(gerar(df, saida))
+        except Exception as e:
+            erros.append(f"{gerar.__name__}: {e}")
+
+    if gerados:
+        print("Graficos gerados com sucesso:")
+        for arquivo in gerados:
+            print(f"- {arquivo}")
+
+    if erros:
+        print("Graficos nao gerados:")
+        for erro in erros:
+            print(f"- {erro}")
 
 
 if __name__ == "__main__":
