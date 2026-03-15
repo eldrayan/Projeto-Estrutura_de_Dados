@@ -3,7 +3,11 @@
 #include "csv_io.h"
 
 /**
- * Salva os resultados de tempo em um arquivo CSV
+ * @brief Salva um vetor de resultados de tempo em um arquivo CSV.
+ *
+ * @param nome_arquivo Caminho do arquivo de destino.
+ * @param resultados Vetor de estruturas com os resultados.
+ * @param quantidade Quantidade de itens no vetor `resultados`.
  */
 void salvar_resultados_csv(const char *nome_arquivo, ResultadoTempo *resultados, int quantidade) {
     FILE *arquivo = fopen(nome_arquivo, "w");
@@ -31,8 +35,12 @@ void salvar_resultados_csv(const char *nome_arquivo, ResultadoTempo *resultados,
 }
 
 /**
- * Salva um único resultado em um arquivo CSV (append mode)
- * Se o arquivo não existe, cria com cabeçalho
+ * @brief Adiciona um unico resultado a um CSV em modo append.
+ *
+ * Se o arquivo estiver vazio, escreve o cabecalho antes de inserir o dado.
+ *
+ * @param nome_arquivo Caminho do arquivo de destino.
+ * @param resultado Estrutura com o resultado a ser persistido.
  */
 void adicionar_resultado_csv(const char *nome_arquivo, ResultadoTempo resultado) {
     FILE *arquivo = fopen(nome_arquivo, "a");

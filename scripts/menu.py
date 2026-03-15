@@ -1,3 +1,5 @@
+"""Interface de linha de comando para gerar massas de dados em CSV."""
+
 from analise import (
     configurar_seed,
     gerar_dados_aleatorios,
@@ -9,6 +11,11 @@ from csv_io import salvar_csv
 
 
 def escolher_tamanho():
+    """Exibe opcoes de tamanho e retorna o valor numerico selecionado.
+
+    Returns:
+        100, 1000, 10000 ou `None` para opcao invalida.
+    """
     print("\nEscolha o tamanho da entrada:")
     print("1 - 100")
     print("2 - 1000")
@@ -24,6 +31,7 @@ def escolher_tamanho():
 
 
 def escolher_tipo():
+    """Exibe opcoes de tipo de entrada e retorna a escolha bruta do usuario."""
     print("\nTipo de entrada:")
     print("1 - Aleatório (caso médio)")
     print("2 - Ordenado (melhor caso)")
@@ -33,6 +41,7 @@ def escolher_tipo():
 
 
 def menu():
+    """Executa o loop principal do menu de geracao de dados."""
     configurar_seed()
 
     while True:
