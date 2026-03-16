@@ -1,9 +1,0 @@
-RESUMO DOS TESTES DE PERFORMANCE
-================================================================================
-
-
-resultados_bubble_sort.csv
---------------------------------------------------------------------------------
-  Aleatório      : Média=  1.6805ms  Mín=  1.6400ms  Máx=  1.7920ms  Std=  0.0220ms
-  Ordenado       : Média=  0.0028ms  Mín=  0.0020ms  Máx=  0.0030ms  Std=  0.0004ms
-  Invertido      : Média=  1.9471ms  Mín=  1.9120ms  Máx=  2.2220ms  Std=  0.0468ms
