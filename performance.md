@@ -2,65 +2,58 @@
 
 ## Visão Geral
 
-Este documento descreve o novo sistema de medição de tempo de execução implementado no projeto, que permite coletar dados de performance dos algoritmos de ordenação e exportá-los em formato CSV compatível com Excel e Python.
+Este documento descreve o sistema de medição de tempo de execução implementado no projeto, que permite coletar dados de performance dos algoritmos de ordenação e exportá-los em formato CSV compatível com Excel e Python.
 
 ## Funcionalidades
 
-✅ *Medição Precisa de Tempo*: Utiliza clock() da biblioteca time.h para medir apenas a execução do algoritmo de ordenação
-✅ *100 Repetições Automáticas*: Cada configuração é executada 100 vezes para obter uma média confiável
-✅ *3 Tipos de Dados*:
+✅ **Medição Precisa de Tempo**: Utiliza `clock()` da biblioteca `time.h` para medir apenas a execução do algoritmo de ordenação  
+✅ **100 Repetições Automáticas**: Cada configuração é executada 100 vezes para obter uma média confiável  
+✅ **3 Tipos de Dados**:
+- Aleatório (caso médio)
+- Ordenado (melhor caso)
+- Invertido (pior caso)
 
-- *Aleatório* (caso médio)
-- *Ordenado* (melhor caso)
-- *Invertido* (pior caso)
-
-✅ *Exportação CSV*: Os resultados são automaticamente salvos em formato CSV com as colunas:
-
+✅ **Exportação CSV**: Os resultados são automaticamente salvos em formato CSV com as colunas:
 - Algoritmo
 - Tipo_Lista (Vetor)
 - Tipo_Dados (Aleatório, Ordenado, Invertido)
 - Tamanho (número de elementos)
 - Tempo_ms (tempo em milissegundos com 4 casas decimais)
 
-## Arquivos Criados/Modificados
+## Arquivos do Sistema
 
 ### Headers (include/)
 
-- *timer.h*: Interface para medição de tempo
-- *csv_io.h*: Interface para exportação CSV
-- *teste_performance.h*: Interface para testes de performance
+- `timer.h`: Interface para medição de tempo
+- `csv_io.h`: Interface para exportação CSV
+- `teste_performance.h`: Interface para testes de performance
 
 ### Implementações (src/ e tests/)
 
-- *src/utils/timer.c*: Implementação de timer usando clock()
-- *src/utils/csv_io.c*: Implementação de exportação para CSV
-- *tests/teste_performance.c*: Testes de performance dos 4 algoritmos
+- `src/utils/timer.c`: Implementação de timer usando `clock()`
+- `src/utils/csv_io.c`: Implementação de exportação para CSV
+- `tests/teste_performance.c`: Testes de performance dos algoritmos
 
 ### Modificações
 
-- *src/main.c*: Adicionadas opções 8-12 para testes de performance
-- *include/testes_manuais.h*: Adicionadas declarações das funções de performance
-- *include/selection.h*: Adicionada função selection_sort() para vetores
-- *include/merge.h*: Adicionada função merge_sort() para vetores
-- *src/algoritmos/selection.c*: Implementação de selection_sort() para vetores
-- *src/algoritmos/merge.c*: Implementação de merge_sort() para vetores
+- `src/main.c`: Adicionadas opções para testes de performance
+- `src/algoritmos/`: Implementações dos algoritmos (Bubble, Selection, Insertion, Merge, Quick)
+- `src/listas/`: Implementações das estruturas (estática, dinâmica)
 
 ## Como Usar
 
-### Menu do Programa
-
-Ao compilar e executar o programa:
+### Compilar e Executar
 
 ```bash
 make clean && make && ./programa
 ```
 
-Você verá as novas opções no menu:
+### Menu do Programa
 
 ```text
 TESTES DE PERFORMANCE (100 repetições + CSV):
-[8] Performance Bubble Sort
-[9] Performance Selection Sort
+[8]  Performance Bubble Sort
+[9]  Performance Selection Sort
 [10] Performance Insertion Sort
 [11] Performance Merge Sort
 [12] Executar todos os testes de performance
@@ -68,21 +61,18 @@ TESTES DE PERFORMANCE (100 repetições + CSV):
 
 ### Exemplo de Uso
 
-1. *Executar um teste específico:*
+**Executar um teste específico:**
+```
 Escolha uma opção: 8
-
+```
 Isso executará 100 repetições do Bubble Sort com os 3 tipos de dados e gerará o arquivo
-resultados_bubble_sort.csv
+`resultados_bubble_sort.csv`
 
-2. *Executar todos os testes de performance:*
+**Executar todos os testes de performance:**
+```
 Escolha uma opção: 12
-
-Isso executará testes de todos os 4 algoritmos e criará os arquivos:
-
-- resultados_bubble_sort.csv
-- resultados_selection_sort.csv
-- resultados_insertion_sort.csv
-- resultados_merge_sort.csv
+```
+Isso executará testes de todos os algoritmos e criará os arquivos de saída correspondentes.
 
 ## Formato do Arquivo CSV
 
@@ -92,58 +82,40 @@ Cada arquivo CSV gerado possui o seguinte formato:
 Algoritmo,Tipo_Lista,Tipo_Dados,Tamanho,Tempo_ms
 Bubble Sort,Vetor,Aleatório,1000,1.6460
 Bubble Sort,Vetor,Aleatório,1000,1.6710
-Bubble Sort,Vetor,Aleatório,1000,1.6970
-...
 Bubble Sort,Vetor,Ordenado,1000,0.0030
-Bubble Sort,Vetor,Ordenado,1000,0.0030
-...
 Bubble Sort,Vetor,Invertido,1000,1.9130
-Bubble Sort,Vetor,Invertido,1000,1.9200
-...
 ```
 
-### Características do CSV:
+### Características:
 
-- *Cabeçalho*: Linha descritiva com nomes das colunas
-- *Dados*: 300 linhas (100 repetições × 3 tipos de dados)
-- *Precisão*: 4 casas decimais para tempos
-- *Separador*: Vírgula (compatível com Excel e Python)
+- **Cabeçalho**: Linha descritiva com nomes das colunas
+- **Dados**: 300 linhas (100 repetições × 3 tipos de dados)
+- **Precisão**: 4 casas decimais para tempos
+- **Separador**: Vírgula (compatível com Excel e Python)
 
 ## Análise dos Dados
 
-Os arquivos CSV podem ser facilmente importados em:
-
-### Excel
+### Em Excel
 
 1. Abra Excel
 2. Vá em Arquivo → Abrir
-3. Selecione o arquivo .csv
+3. Selecione o arquivo `.csv`
 4. Excel abrirá uma janela de importação (deixe as configurações padrão)
 5. Clique em OK
 
-### Python
+### Em Python
 
 ```python
 import pandas as pd
-```
-
-#### Ler o arquivo CSV
-
-```python
-df = pd.read_csv('resultados_bubble_sort.csv')
-```
-
-#### Ver estatísticas
-
-```python
-print(df.groupby('Tipo_Dados')['Tempo_ms'].describe())
-```
-
-#### Gerar gráficos
-
-```python
 import matplotlib.pyplot as plt
 
+# Ler arquivo
+df = pd.read_csv('resultados_bubble_sort.csv')
+
+# Ver estatísticas
+print(df.groupby('Tipo_Dados')['Tempo_ms'].describe())
+
+# Gerar gráfico
 df.groupby('Tipo_Dados')['Tempo_ms'].mean().plot(kind='bar')
 plt.xlabel('Tipo de Dados')
 plt.ylabel('Tempo Médio (ms)')
@@ -154,35 +126,33 @@ plt.show()
 
 ## Parametrizando os Testes
 
-Se quiser alterar:
-
 ### Número de Repetições
 
-Edite [teste_performance.c](tests/teste_performance.c):
+Edite `tests/teste_performance.c`:
 
 ```c
-#define NUM_REPETICOES 100 // Altere para o desejado
+#define NUM_REPETICOES 100  // Altere para o desejado
 ```
 
 ### Tamanho do Vetor
 
-Edite [teste_performance.c](tests/teste_performance.c):
+Edite `tests/teste_performance.c`:
 
 ```c
-#define TAMANHO_VETOR 1000 // Altere para o desejado
+#define TAMANHO_VETOR 1000  // Altere para o desejado
 ```
 
-## Estrutura de Dados Utilizadas
+## Estrutura de Dados Principal
 
 ### ResultadoTempo (include/timer.h)
 
 ```c
 typedef struct {
-    char algoritmo[50];    // Nome do algoritmo
-    char tipo_lista[20];   // Tipo da lista (Vetor)
-    char tipo_dados[30];   // Tipo dos dados (Aleatório, Ordenado, Invertido)
-    int tamanho;           // Tamanho dos dados
-    double tempo_ms;       // Tempo em milissegundos
+    char algoritmo[50];      // Nome do algoritmo
+    char tipo_lista[20];     // Tipo da lista (Vetor)
+    char tipo_dados[30];     // Tipo dos dados (Aleatório, Ordenado, Invertido)
+    int tamanho;             // Tamanho dos dados
+    double tempo_ms;         // Tempo em milissegundos
 } ResultadoTempo;
 ```
 
@@ -190,23 +160,23 @@ typedef struct {
 
 ### timer.c
 
-- clock_t iniciar_timer(void): Inicia a medição de tempo
-- double parar_timer(clock_t inicio): Para a medição e retorna tempo em ms
-- ResultadoTempo criar_resultado(...): Cria estrutura com dados do teste
+- `clock_t iniciar_timer(void)`: Inicia a medição de tempo
+- `double parar_timer(clock_t inicio)`: Para a medição e retorna tempo em ms
+- `ResultadoTempo criar_resultado(...)`: Cria estrutura com dados do teste
 
 ### csv_io.c
 
-- void salvar_resultados_csv(...): Salva array de resultados em CSV
-- void adicionar_resultado_csv(...): Adiciona resultado individual (append)
+- `void salvar_resultados_csv(...)`: Salva array de resultados em CSV
+- `void adicionar_resultado_csv(...)`: Adiciona resultado individual (append)
 
 ## Notas Importantes
 
-1. *Precisão*: A medição usa clock() que mede tempo de CPU. Em sistemas com múltiplas tarefas, pode haver variação.
-2. *Tamanho Fixo*: Todos os testes usam vetores de 1000 elementos. Para testar escalabilidade, modifique TAMANHO_VETOR.
-3. *Random*: Um srand(time(NULL)) é executado no início dos testes, então dados aleatórios serão diferentes a cada execução.
-4. *Performance*: Os testes podem levar alguns minutos para completar (600 ordenações × múltiplos algoritmos).
-5. *Melhor Caso*: O Bubble Sort e Selection Sort mostram tempos muito pequenos (< 0.01ms) no melhor caso (dados ordenados).
-6. *Pior Caso*: O Bubble Sort mostra os maiores tempos no pior caso (dados invertidos).
+1. **Precisão**: A medição usa `clock()` que mede tempo de CPU. Em sistemas com múltiplas tarefas, pode haver variação.
+2. **Tamanho Fixo**: Todos os testes usam vetores de 1000 elementos. Para testar escalabilidade, modifique `TAMANHO_VETOR`.
+3. **Aleatoriedade**: Um `srand(time(NULL))` é executado no início dos testes, então dados aleatórios serão diferentes a cada execução.
+4. **Duração**: Os testes podem levar alguns minutos para completar (múltiplos algoritmos × múltiplos tipos de dados).
+5. **Melhor Caso**: Bubble Sort e Selection Sort mostram tempos muito pequenos (< 0.01ms) no melhor caso (dados ordenados).
+6. **Pior Caso**: Bubble Sort apresenta os maiores tempos no pior caso (dados invertidos).
 
 ## Compilação
 
@@ -226,8 +196,9 @@ make run
 
 ## Saída Esperada
 
-Durante a execução dos testes, você verá:
+Durante a execução dos testes:
 
+```
 ╔═══════════════════════════════════════════╗
 ║ TESTES DE PERFORMANCE - BUBBLE SORT       ║
 ║ (100 execuções por configuração)          ║
@@ -245,25 +216,24 @@ Executando testes com dados INVERTIDOS...
 ╔═══════════════════════════════════════════╗
 ║ TESTE DO BUBBLE SORT CONCLUÍDO!           ║
 ╚═══════════════════════════════════════════╝
+```
 
 ## Troubleshooting
 
-*P: O arquivo CSV não foi criado*
+**P: O arquivo CSV não foi criado**  
+R: Verifique se o diretório está com permissão de escrita. O arquivo é salvo no diretório corrente.
 
-- R: Verifique se o diretório está com permissão de escrita. O arquivo é salvo no diretório corrente.
+**P: Os tempos estão muito pequenos (< 0.001ms)**  
+R: Isso é normal para vetores pequenos. Aumente `TAMANHO_VETOR` em `teste_performance.c`
 
-*P: Os tempos estão muito pequenos (< 0.001ms)*
+**P: Como comparar múltiplos algoritmos?**  
+R: Execute a opção 12 para rodar todos os testes e compare os arquivos CSV resultantes em Excel ou Python.
 
-- R: Isso é normal para vetores pequenos. Aumente TAMANHO_VETOR em teste_performance.c
+## Referência: Artigo Final
 
-*P: Como comparar múltiplos algoritmos?*
+Os resultados de performance foram consolidados no artigo final [Artigo_Finalizado.pdf](docs/Artigo_Finalizado.pdf), que contém:
+- Análise comparativa de todos os algoritmos
+- Gráficos de performance por cenário
+- Conclusões sobre eficiência em diferentes estruturas de dados (vetor, lista dinâmica, lista estática)
 
-- R: Execute a opção 12 para rodar todos os testes e compare os arquivos CSV resultantes em Excel ou Python.
-
-## Próximas Melhorias Possíveis
-
-- [ ] Adicionar testes para listas dinâmicas e estáticas
-- [ ] Permitir escolher tamanho do vetor via menu
-- [ ] Exportar as 100 repetições em colunas separadas (para análise estatística avançada)
-- [ ] Adicionar gráficos automáticos usando Python
-- [ ] Implementar testes multithread para avaliar acesso concorrente
+Para consultar os resultados já processados e visualizados, veja o artigo ao invés de rodar os testes novamente.
