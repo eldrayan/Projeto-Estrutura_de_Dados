@@ -1,205 +1,300 @@
 # Projeto: Ranking de Alunos e Análise de Algoritmos
 
-> Trabalho da disciplina de Estrutura de Dados - Engenharia de Software (UFCA).
+> Trabalho da disciplina de Estrutura de Dados do curso de Engenharia de Software da UFCA.
 
-Este projeto consiste na implementação e análise comparativa de desempenho de **5 Algoritmos de Ordenação** aplicados sobre duas estruturas de dados distintas: **Lista Encadeada Dinâmica** e **Lista Encadeada Estática**.
+Este repositório reúne a implementação, a experimentação e a documentação de um sistema de ranking de alunos usado para comparar algoritmos de ordenação em diferentes estruturas de dados. O projeto combina código em C, scripts de análise em Python e um artigo final em LaTeX no formato IEEE.
 
-O objetivo é gerenciar um ranking de alunos (ID e Nota) e medir o tempo de execução (em milissegundos) para diferentes volumes de dados e cenários de ordenação.
+## Visão geral
 
-## Equipe e Responsabilidades
+O problema central do trabalho é ordenar registros de alunos contendo ID e nota, medindo o impacto da escolha do algoritmo e da estrutura de dados no tempo de execução.
 
-| Integrante | Algoritmo Principal | Responsabilidade Extra |
+O projeto considera:
+
+- 5 algoritmos: Bubble Sort, Selection Sort, Insertion Sort, Quick Sort e Merge Sort
+- 3 estruturas: vetor, lista duplamente encadeada dinâmica e lista duplamente encadeada estática
+- 3 tamanhos de entrada: 100, 1.000 e 10.000 elementos
+- 3 cenários: aleatório, ordenado e invertido
+- 100 repetições por configuração
+
+Esse conjunto permite comparar melhor, médio e pior caso, além de fundamentar a escolha do algoritmo ideal para a aplicação proposta.
+
+## Equipe e responsabilidades
+
+| Integrante | Algoritmo principal | Responsabilidade extra |
 |------------|---------------------|------------------------|
-| **Elder Rayan** | Bubble Sort | Implementação da **Lista Estática** |
-| **Samuel Wagner** | Selection Sort | Implementação da **Lista Dinâmica** |
-| **Diogo Gomes** | Insertion Sort | Gerador de Dados, Menu e Integração |
-| **Manoel Junio** | Quick Sort | Análise Teórica e Complexidade |
-| **Pedro Yan** | Merge Sort | Script de Análise de Dados (Python) |
-| **Antonio Neto** | Quick Sort (Suporte) | Sistema de Benchmarking, Documentação e Slides |
+| Elder Rayan | Bubble Sort | Implementação da lista estática |
+| Samuel Wagner | Selection Sort | Implementação da lista dinâmica |
+| Diogo Gomes | Insertion Sort | Gerador de dados, menu e integração |
+| Manoel Junio | Quick Sort | Análise teórica e complexidade |
+| Pedro Yan | Merge Sort | Scripts de análise de dados |
+| Antonio Neto | Quick Sort (suporte) | Benchmarking, documentação e slides |
 
-## Tecnologias Utilizadas
+## Tecnologias utilizadas
 
-* **Linguagem C:** Implementação das estruturas de dados e algoritmos de ordenação
-* **Python:** Scripts para análise de dados e geração de gráficos (pandas, matplotlib)
-* **LaTeX:** Documentação acadêmica no formato IEEE
-* **GCC/Make:** Sistema de compilação
+- C para estruturas de dados, algoritmos e benchmarking
+- Python para geração de dados e análise dos resultados
+- LaTeX para o artigo final no padrão IEEE
+- GCC e Make para compilação
 
-## Estrutura do Projeto
+## Estrutura do projeto
 
 ```text
+.
 ├── src/
-│   ├── main.c                  # Menu principal e sistema de testes
-│   ├── listas/
-│   │   ├── dinamica.c          # Lista encadeada com alocação dinâmica
-│   │   └── estatica.c          # Lista encadeada com vetor pré-alocado
+│   ├── main.c
 │   ├── algoritmos/
 │   │   ├── bubble.c
 │   │   ├── insertion.c
-│   │   ├── selection.c
+│   │   ├── merge.c
 │   │   ├── quick.c
-│   │   └── merge.c
+│   │   └── selection.c
+│   ├── listas/
+│   │   ├── dinamica.c
+│   │   └── estatica.c
 │   └── utils/
-│       ├── gerador.c           # Gerador de dados de teste
-│       ├── timer.c             # Sistema de medição de tempo
-│       ├── csv_io.c            # Exportação de resultados em CSV
-│       └── merge_utils.c       # Funções auxiliares do Merge Sort
-├── include/                    # Headers (.h)
-├── tests/                      # Testes unitários e de performance
-│   ├── teste_performance.c     # Sistema de benchmarking
-│   ├── teste_bubble.c
-│   ├── teste_insertion.c
-│   ├── teste_selection.c
-│   ├── teste_merge.c
-│   └── testes_manuais.c
-├── scripts/                    # Scripts Python
-│   ├── menu.py                 # Interface de menu Python
-│   ├── analise.py              # Gerador de dados
-│   └── analise_performance_simples.py  # Análise estatística básica
+│       ├── csv_io.c
+│       ├── gerador.c
+│       ├── merge_utils.c
+│       └── timer.c
+├── include/
+├── tests/
+├── scripts/
+│   ├── analise.py
+│   ├── analise_performance.py
+│   ├── analise_performance_simples.py
+│   ├── csv_io.py
+│   ├── menu.py
+│   └── requirements.txt
 ├── docs/
-│   ├── Trabalho.md             # Especificação do trabalho
-│   └── artigo_desenvolvimento_analise.tex  # Artigo IEEE em LaTeX
-├── makefile                    # Sistema de build
-├── performance.md              # Documentação do sistema de medição
+│   ├── Artigo_Finalizado.tex
+│   ├── Artigo_Estrutura_de_dados.pdf
+│   ├── Trabalho.md
+│   └── graficos/
+├── GUIA_RAPIDO.md
+├── makefile
+├── performance.md
 └── README.md
 ```
 
 ## Funcionalidades
 
-1. **Estruturas de Dados**
-   * **Lista Dinâmica:** Alocação de memória sob demanda usando malloc/free
-   * **Lista Estática:** Vetor pré-alocado com gerenciamento manual de índices livres
+### Estruturas de dados
 
-2. **Algoritmos de Ordenação**
-   
-   Implementação completa de 5 algoritmos testados em três cenários:
-   * **Melhor Caso:** Dados já ordenados
-   * **Caso Médio:** Dados aleatórios
-   * **Pior Caso:** Dados inversamente ordenados
-   
-   Algoritmos implementados:
-   * Bubble Sort
-   * Insertion Sort
-   * Selection Sort
-   * Quick Sort
-   * Merge Sort
+- Lista dinâmica com alocação sob demanda usando `malloc` e `free`
+- Lista estática com vetor pré-alocado e gerenciamento manual de índices livres
+- Vetor convencional para comparação de desempenho
 
-3. **Sistema de Medição de Performance**
-   * Medição precisa de tempo usando clock()
-   * 100 repetições por configuração para garantir confiabilidade estatística
-   * Exportação automática de resultados em formato CSV
-   * Suporte a múltiplos tamanhos de entrada: 100, 1.000, 10.000 elementos
+### Algoritmos de ordenação
 
-4. **Análise e Documentação**
-   * Artigo acadêmico em LaTeX (formato IEEE)
-   * Análise teórica de complexidade Big-O
-   * Scripts Python para análise estatística
+- Bubble Sort
+- Selection Sort
+- Insertion Sort
+- Quick Sort
+- Merge Sort
 
-## Como Executar
+Todos são avaliados em três cenários:
 
-### Pré-requisitos
+- Melhor caso: dados ordenados
+- Caso médio: dados aleatórios
+- Pior caso: dados inversamente ordenados
 
-* **Compilador C:** GCC ou compatível
-* **Make:** Para usar o sistema de build automatizado
-* **Python 3.x:** (Opcional) Para análise estatística
-  ```bash
-  pip install -r scripts/requirements.txt
-  ```
+### Sistema de medição
 
-### Compilação
+- Medição de tempo com `clock()`
+- 100 repetições por configuração
+- Exportação automática de resultados em CSV
+- Execução por algoritmo, por estrutura ou de forma completa
 
-#### Usando Make (Recomendado)
+### Documentação e análise
+
+- Artigo acadêmico final em [docs/Artigo_Finalizado.tex](docs/Artigo_Finalizado.tex)
+- Gráficos finais em [docs/graficos](docs/graficos)
+- Especificação do trabalho em [docs/Trabalho.md](docs/Trabalho.md)
+- Documentação complementar em [performance.md](performance.md)
+
+## Compilação
+
+### Usando Make
+
+Se você tiver `make` disponível:
 
 ```bash
-# Compilar o programa principal
+make clean
 make
-
-# Executar
-./ranking_app
 ```
 
-#### Compilação Manual
+O alvo principal gera o executável `programa` na raiz do projeto.
+
+### Compilação manual
+
+Para compilar diretamente com GCC:
 
 ```bash
-gcc src/main.c src/listas/*.c src/algoritmos/*.c src/utils/*.c tests/*.c -I include -o ranking_app
-
-# Executar
-./ranking_app
+gcc -Wall -Wextra -g -I./include -o programa.exe src/main.c src/algoritmos/*.c src/listas/*.c src/utils/*.c tests/*.c
 ```
 
-### Uso do Programa
+## Execução
 
-O programa oferece as seguintes opções principais:
+### Executar o programa
 
-1. **Testes Manuais:** Testa algoritmos individualmente com dados pequenos
-2. **Testes de Performance:** Executa benchmarking completo com 100 repetições
-3. **Exportação CSV:** Gera arquivos de resultados para análise posterior
-
-Exemplo de uso:
-```
-Menu Principal:
-1. Testar Bubble Sort
-2. Testar Selection Sort
-...
-8. Performance: Bubble Sort (100 execuções)
-12. Performance: Todos os Algoritmos
-...
-```
-
-### Análise de Resultados (Opcional)
-
-Após executar os testes de performance, você pode usar os scripts Python para análise:
+No Windows:
 
 ```bash
-# Análise estatística simples
-python scripts/analise_performance_simples.py
-
-# Menu interativo Python
-python scripts/menu.py
+./programa.exe
 ```
 
-Os arquivos CSV gerados seguem o formato:
+Se tiver compilado pelo `make`, dependendo do ambiente:
+
+```bash
+./programa
 ```
-Algoritmo,Tipo_Lista,Tipo_Dados,Tamanho,Tempo_ms
-Bubble Sort,Vetor,Aleatório,1000,15.2345
-...
+
+### Opção recomendada: teste completo do trabalho
+
+No menu principal, use a opção `99`.
+
+Ela executa:
+
+- 5 algoritmos
+- 3 estruturas
+- 3 tamanhos
+- 3 tipos de dados
+- 100 repetições por configuração
+
+Total aproximado: 13.500 execuções.
+
+Esse processo pode levar bastante tempo, especialmente nos algoritmos quadráticos com `N = 10.000`.
+
+### Execução por partes
+
+Se a opção `99` for pesada demais, rode em blocos:
+
+- Opção `18`: todos os algoritmos com vetor
+- Opção `24`: todos os algoritmos com lista dinâmica
+- Opção `30`: todos os algoritmos com lista estática
+
+### Outras opções relevantes do menu
+
+- `1` a `7`: testes básicos e manuais
+- `8` a `12`: testes simples de performance
+- `13` a `18`: testes completos com vetor
+- `19` a `24`: testes completos com lista dinâmica
+- `25` a `30`: testes completos com lista estática
+- `99`: execução completa do trabalho
+
+## Fluxo recomendado
+
+Para o fluxo completo de geração de dados e atualização dos gráficos do projeto, consulte [GUIA_RAPIDO.md](GUIA_RAPIDO.md).
+
+Em alto nível, o processo é:
+
+1. Compilar o executável.
+2. Rodar a opção `99` para gerar a base completa.
+3. Conferir os arquivos `resultados_*.csv` na raiz.
+4. Atualizar os gráficos com `python scripts/analise.py`.
+5. Validar o entregável final em [docs/Artigo_Finalizado.tex](docs/Artigo_Finalizado.tex).
+
+## Arquivos gerados
+
+Os testes completos geram 15 arquivos CSV, organizados por estrutura.
+
+### Vetor
+
+- `resultados_bubble_completo.csv`
+- `resultados_selection_completo.csv`
+- `resultados_insertion_completo.csv`
+- `resultados_merge_completo.csv`
+- `resultados_quick_completo.csv`
+
+### Lista dinâmica
+
+- `resultados_bubble_dinamica.csv`
+- `resultados_selection_dinamica.csv`
+- `resultados_insertion_dinamica.csv`
+- `resultados_merge_dinamica.csv`
+- `resultados_quick_dinamica.csv`
+
+### Lista estática
+
+- `resultados_bubble_estatica.csv`
+- `resultados_selection_estatica.csv`
+- `resultados_insertion_estatica.csv`
+- `resultados_merge_estatica.csv`
+- `resultados_quick_estatica.csv`
+
+Alguns fluxos de teste simples também podem gerar arquivos no formato `resultados_*_sort.csv`, usados pelos scripts de análise básica.
+
+## Análise dos resultados
+
+### Instalar dependências Python
+
+```bash
+pip install -r scripts/requirements.txt
 ```
 
-## Metodologia de Avaliação
+### Scripts disponíveis
 
-A métrica principal é o **Tempo de Execução** medido em milissegundos, excluindo o tempo de:
-* Geração dos dados
-* Operações de entrada/saída
-* Impressão de resultados
+- `python scripts/analise.py`: gera os gráficos finais a partir dos arquivos `resultados_*.csv` e salva em [docs/graficos](docs/graficos)
+- `python scripts/analise_performance.py`: análise pontual com `pandas` e `matplotlib` para arquivos no formato `resultados_*_sort.csv`
+- `python scripts/analise_performance_simples.py`: análise em modo texto para arquivos no formato `resultados_*_sort.csv`
+- `python scripts/menu.py`: gerador de massas de dados em CSV
 
-Cada experimento é repetido **100 vezes**, e a **média aritmética** é calculada para garantir confiabilidade estatística e minimizar variações causadas por fatores externos.
+### Script recomendado para atualização dos gráficos
 
-### Cenários de Teste
+Para o conjunto completo de resultados do projeto, use:
 
-| Tamanho | Tipo de Dados | Propósito |
-|---------|---------------|-----------|
-| 100 elementos | Aleatório, Ordenado, Invertido | Caso pequeno |
-| 1.000 elementos | Aleatório, Ordenado, Invertido | Caso médio |
-| 10.000 elementos | Aleatório, Ordenado, Invertido | Caso grande |
+```bash
+python scripts/analise.py
+```
 
-## Documentação Adicional
+Os detalhes operacionais desse fluxo estão resumidos em [GUIA_RAPIDO.md](GUIA_RAPIDO.md).
 
-* **performance.md:** Detalhes do sistema de medição de tempo
-* **docs/Trabalho.md:** Especificação completa do trabalho
-* **docs/artigo_desenvolvimento_analise.tex:** Artigo acadêmico com análise teórica e complexidade Big-O
+### O que observar nos resultados
 
-## Entregáveis
+- Comparação entre melhor, médio e pior caso
+- Diferença entre algoritmos `O(n^2)` e `O(n log n)`
+- Impacto da estrutura de dados no tempo de execução
+- Estabilidade e previsibilidade do algoritmo escolhido para o artigo
 
-* Código-fonte completo em C
-* Artigo formatado no padrão IEEE com análise teórica e empírica
-* Apresentação de slides para defesa
-* Resultados experimentais em formato CSV
+## Metodologia de avaliação
+
+A métrica principal do trabalho é o tempo de execução em milissegundos, medido apenas no trecho de ordenação, excluindo:
+
+- Geração dos dados
+- Entrada e saída
+- Impressão de resultados
+
+Cada experimento é repetido 100 vezes, e a média é utilizada para reduzir variações externas.
+
+## Entregável final
+
+O artigo final do projeto está em [docs/Artigo_Finalizado.tex](docs/Artigo_Finalizado.tex).
+
+Esse arquivo reúne:
+
+- Motivação e aplicação real
+- Fundamentação teórica e complexidade
+- Metodologia experimental
+- Escolha do algoritmo ideal
+- Análise dos gráficos e discussão dos resultados
+
+Os gráficos utilizados no artigo estão em [docs/graficos](docs/graficos), e o PDF de referência original está em [docs/Artigo_Estrutura_de_dados.pdf](docs/Artigo_Estrutura_de_dados.pdf).
+
+## Dicas práticas
+
+- Rode os testes completos quando puder deixar a máquina executando por bastante tempo
+- Não interrompa o terminal durante os testes longos
+- Teste primeiro um bloco menor para estimar tempo de execução
+- Bubble, Selection e Insertion com `N = 10.000` tendem a ser os cenários mais demorados
+- Se o objetivo for validar a versão final, confirme primeiro os CSVs e depois regenere os gráficos com `python scripts/analise.py`
+
+## Documentação relacionada
+
+- [GUIA_RAPIDO.md](GUIA_RAPIDO.md)
+- [docs/Trabalho.md](docs/Trabalho.md)
+- [docs/Artigo_Finalizado.tex](docs/Artigo_Finalizado.tex)
+- [performance.md](performance.md)
 
 ## Licença
 
-Este projeto foi desenvolvido para fins acadêmicos na **Universidade Federal do Cariri (UFCA)**.
-
----
-
-**Disciplina:** Estrutura de Dados  
-**Curso:** Engenharia de Software  
-**Instituição:** UFCA
+Projeto desenvolvido para fins acadêmicos na Universidade Federal do Cariri.
