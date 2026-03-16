@@ -221,27 +221,23 @@ static void quick_rec_estatica(ListaEstatica *l, int inicio, int fim) {
 
         int pivo = particao_estatica(l, inicio, fim);
 
-        int tam_esq = 0;
-        int tam_dir = 0;
+        if (pivo == inicio) {
+            inicio = l->dados[pivo].prox;
+            continue;
+        }
+        if (pivo == fim) {
+            fim = l->dados[pivo].ant;
+            continue;
+        }
 
-        if (l->dados[pivo].ant != -1)
-            tam_esq = tamanho_intervalo_estatica(l, inicio, l->dados[pivo].ant);
-
-        if (l->dados[pivo].prox != -1)
-            tam_dir = tamanho_intervalo_estatica(l, l->dados[pivo].prox, fim);
+        int tam_esq = tamanho_intervalo_estatica(l, inicio, l->dados[pivo].ant);
+        int tam_dir = tamanho_intervalo_estatica(l, l->dados[pivo].prox, fim);
 
         if (tam_esq < tam_dir) {
-
-            if (l->dados[pivo].ant != -1)
-                quick_rec_estatica(l, inicio, l->dados[pivo].ant);
-
+            quick_rec_estatica(l, inicio, l->dados[pivo].ant);
             inicio = l->dados[pivo].prox;
-
         } else {
-
-            if (l->dados[pivo].prox != -1)
-                quick_rec_estatica(l, l->dados[pivo].prox, fim);
-
+            quick_rec_estatica(l, l->dados[pivo].prox, fim);
             fim = l->dados[pivo].ant;
         }
     }

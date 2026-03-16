@@ -2,6 +2,11 @@
 #include <stdlib.h>
 #include "lista_dinamica.h"
 
+/**
+ * @brief Inicializa uma lista duplamente encadeada dinamica vazia.
+ *
+ * @return Ponteiro para a lista criada.
+ */
 ListaDinamica* lista_dinamica_inicializa(void) {
     ListaDinamica *lista = (ListaDinamica*)malloc(sizeof(ListaDinamica));
     lista->inicio = NULL;
@@ -11,6 +16,13 @@ ListaDinamica* lista_dinamica_inicializa(void) {
     return lista;
 }
 
+/**
+ * @brief Insere um novo elemento no final da lista dinamica.
+ *
+ * @param lista Ponteiro para a lista.
+ * @param id Identificador do registro.
+ * @param nota Nota associada ao registro.
+ */
 void lista_dinamica_insere(ListaDinamica *lista, int id, float nota) {
     NoDinamico *novo_no = (NoDinamico*)malloc(sizeof(NoDinamico));
     novo_no->ant = NULL;
@@ -29,6 +41,13 @@ void lista_dinamica_insere(ListaDinamica *lista, int id, float nota) {
     lista->quantidade++;
 }
 
+/**
+ * @brief Busca um elemento pelo ID e retorna sua posicao logica.
+ *
+ * @param lista Ponteiro para a lista.
+ * @param id_alvo ID a ser buscado.
+ * @return Indice baseado em zero, ou -1 se nao encontrado.
+ */
 int lista_dinamica_busca(ListaDinamica *lista, int id_alvo) {
     NoDinamico *atual = lista->inicio;
     int contador = 0;
@@ -40,6 +59,12 @@ int lista_dinamica_busca(ListaDinamica *lista, int id_alvo) {
     return (atual == NULL) ? -1 : contador;
 }
 
+/**
+ * @brief Remove da lista o primeiro no com o ID informado.
+ *
+ * @param lista Ponteiro para a lista.
+ * @param id_alvo ID a ser removido.
+ */
 void lista_dinamica_remove(ListaDinamica *lista, int id_alvo) {
     NoDinamico *atual = lista->inicio;
 
@@ -74,6 +99,11 @@ void lista_dinamica_remove(ListaDinamica *lista, int id_alvo) {
     
 }
 
+/**
+ * @brief Imprime os elementos da lista do inicio para o fim.
+ *
+ * @param lista Ponteiro para a lista.
+ */
 void lista_dinamica_imprimir(ListaDinamica *lista) {
     (lista->quantidade == 0) ? printf("Lista vazia.\n") : printf("*** Imprimindo de INICIO para FIM ***\n");
     
@@ -84,6 +114,11 @@ void lista_dinamica_imprimir(ListaDinamica *lista) {
     }
 }
 
+/**
+ * @brief Imprime os elementos da lista do fim para o inicio.
+ *
+ * @param lista Ponteiro para a lista.
+ */
 void lista_dinamica_imprimir_inverso(ListaDinamica *lista) {
     (lista->quantidade == 0) ? printf("Lista vazia.\n") : printf("*** Imprimindo de FIM para INICIO ***\n");
     
@@ -95,6 +130,11 @@ void lista_dinamica_imprimir_inverso(ListaDinamica *lista) {
     
 }
 
+/**
+ * @brief Libera toda a memoria alocada pela lista dinamica.
+ *
+ * @param lista Ponteiro para a lista.
+ */
 void lista_dinamica_libera(ListaDinamica *lista) {
     NoDinamico *atual = lista->inicio;
     NoDinamico *no_aux = NULL;
