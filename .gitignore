@@ -60,6 +60,8 @@ dkms.conf
 __pycache__/
 *.pyc
 *.pyo
+venv/
+.venv/
 
 # =========================
 # Dados gerados (massa de testes)

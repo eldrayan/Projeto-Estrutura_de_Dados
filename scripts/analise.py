@@ -147,8 +147,8 @@ def carregar_resultados(caminho_csv="resultados.csv"):
             "Media_Tempo_ms",
         ],
     )
-    col_entrada = _resolver_coluna(df, ["Tipo_Entrada", "Entrada", "Cenario", "Caso"])
-    col_estrutura = _resolver_coluna(df, ["Estrutura", "Tipo_Estrutura", "Lista", "Implementacao"])
+    col_entrada = _resolver_coluna(df, ["Tipo_Entrada", "Tipo_Dados", "Entrada", "Cenario", "Caso"])
+    col_estrutura = _resolver_coluna(df, ["Estrutura", "Tipo_Estrutura", "Tipo_Lista", "Lista", "Implementacao"])
 
     obrigatorias = [col_algoritmo, col_tamanho, col_tempo]
     if any(col is None for col in obrigatorias):
@@ -180,7 +180,7 @@ def carregar_resultados(caminho_csv="resultados.csv"):
     if "Estrutura" in dados.columns:
         estrutura_norm = dados["Estrutura"].map(_normalizar_texto)
         dados["Estrutura"] = estrutura_norm.map(
-            lambda s: "Dinamica" if "dinam" in s else ("Estatica" if "estat" in s else "Outra")
+            lambda s: "Dinamica" if "dinam" in s else ("Estatica" if "estat" in s else ("Vetor" if "vetor" in s else "Outra"))
         )
 
     return dados
@@ -200,6 +200,43 @@ def _filtro_aleatorio(df):
         if not filtrado.empty:
             return filtrado
     return df
+
+
+def _gerar_grafico_auxiliar_tempos_baixos(
+    resumo,
+    x,
+    y,
+    hue,
+    pasta_saida,
+    nome_arquivo,
+    titulo,
+    xlabel,
+    ylabel,
+    titulo_legenda=None,
+):
+    """Gera um grafico auxiliar apenas com a faixa de tempos baixos."""
+    tempos_baixos = resumo.loc[resumo[y] <= 10, y]
+    if tempos_baixos.empty:
+        return None
+
+    limite_zoom = max(tempos_baixos.max() * 1.25, 1)
+    fig, ax = plt.subplots(figsize=(10, 5), constrained_layout=True)
+    sns.barplot(data=resumo, x=x, y=y, hue=hue, ax=ax)
+    ax.set_ylim(0, limite_zoom)
+    ax.set_title(titulo)
+    ax.set_xlabel(xlabel)
+    ax.set_ylabel(ylabel)
+    if titulo_legenda is not None:
+        ax.legend(title=titulo_legenda, bbox_to_anchor=(1.02, 1), loc="upper left")
+    else:
+        legenda = ax.get_legend()
+        if legenda is not None:
+            legenda.remove()
+
+    destino = pasta_saida / nome_arquivo
+    fig.savefig(destino, dpi=200)
+    plt.close(fig)
+    return destino
 
 
 def gerar_grafico_1_comparacao_geral(df, pasta_saida):
@@ -223,17 +260,27 @@ def gerar_grafico_1_comparacao_geral(df, pasta_saida):
         .sort_values("Tempo_Medio_ms")
     )
 
-    plt.figure(figsize=(11, 6))
-    sns.barplot(data=resumo, x="Algoritmo", y="Tempo_Medio_ms", hue="Algoritmo", legend=False)
-    plt.title("Comparacao Geral - Tempo x Algoritmo (N=10.000)")
-    plt.xlabel("Algoritmo")
-    plt.ylabel("Tempo medio (ms)")
-    plt.tight_layout()
+    fig, ax = plt.subplots(figsize=(11, 6), constrained_layout=True)
+    sns.barplot(data=resumo, x="Algoritmo", y="Tempo_Medio_ms", hue="Algoritmo", legend=False, ax=ax)
+    ax.set_title("Comparacao Geral - Tempo x Algoritmo (N=10.000)")
+    ax.set_xlabel("Algoritmo")
+    ax.set_ylabel("Tempo medio (ms)")
 
     destino = pasta_saida / "grafico_1_comparacao_geral_10k.png"
-    plt.savefig(destino, dpi=200)
-    plt.close()
-    return destino
+    fig.savefig(destino, dpi=200)
+    plt.close(fig)
+    auxiliar = _gerar_grafico_auxiliar_tempos_baixos(
+        resumo,
+        "Algoritmo",
+        "Tempo_Medio_ms",
+        "Algoritmo",
+        pasta_saida,
+        "grafico_1_comparacao_geral_10k_zoom.png",
+        "Comparacao Geral - Tempos Ate 10 ms (N=10.000)",
+        "Algoritmo",
+        "Tempo medio (ms)",
+    )
+    return [destino] + ([auxiliar] if auxiliar else [])
 
 
 def gerar_grafico_2_curva_crescimento(df, pasta_saida):
@@ -319,29 +366,336 @@ def gerar_grafico_3_comparativo_estrutural(df, pasta_saida):
         .sort_values(["Tamanho", "Estrutura"])
     )
 
-    plt.figure(figsize=(11, 6))
-    sns.barplot(data=resumo, x="Tamanho", y="Tempo_Medio_ms", hue="Estrutura")
-    plt.title(f"Comparativo Estrutural - {algoritmo_escolhido} (Dinamica vs Estatica)")
-    plt.xlabel("Tamanho do vetor")
-    plt.ylabel("Tempo medio (ms)")
-    plt.tight_layout()
+    fig, ax = plt.subplots(figsize=(11, 6), constrained_layout=True)
+    sns.barplot(data=resumo, x="Tamanho", y="Tempo_Medio_ms", hue="Estrutura", ax=ax)
+    ax.set_title(f"Comparativo Estrutural - {algoritmo_escolhido} (Dinamica vs Estatica)")
+    ax.set_xlabel("Tamanho do vetor")
+    ax.set_ylabel("Tempo medio (ms)")
 
     destino = pasta_saida / "grafico_3_comparativo_estrutural.png"
+    fig.savefig(destino, dpi=200)
+    plt.close(fig)
+    auxiliar = _gerar_grafico_auxiliar_tempos_baixos(
+        resumo,
+        "Tamanho",
+        "Tempo_Medio_ms",
+        "Estrutura",
+        pasta_saida,
+        "grafico_3_comparativo_estrutural_zoom.png",
+        f"Comparativo Estrutural - Tempos Ate 10 ms ({algoritmo_escolhido})",
+        "Tamanho do vetor",
+        "Tempo medio (ms)",
+        "Estrutura",
+    )
+    return [destino] + ([auxiliar] if auxiliar else [])
+
+
+def gerar_grafico_4_por_tipo_entrada(df, pasta_saida):
+    """Gera grafico agrupado comparando algoritmos em cada tipo de entrada.
+
+    Mostra barras agrupadas por tipo de entrada (Aleatorio, Ordenado, Invertido)
+    para N=10.000, permitindo ver qual algoritmo se beneficia ou sofre em cada cenario.
+    """
+    if "Tipo_Entrada" not in df.columns:
+        raise ValueError("Sem coluna Tipo_Entrada para o Grafico 4.")
+
+    dados = df[df["Tamanho"] == 10000].copy()
+    if dados.empty:
+        raise ValueError("Sem dados N=10000 para o Grafico 4.")
+
+    resumo = (
+        dados.groupby(["Tipo_Entrada", "Algoritmo"], as_index=False)["Tempo_Medio_ms"]
+        .mean()
+        .sort_values(["Tipo_Entrada", "Tempo_Medio_ms"])
+    )
+
+    fig, ax = plt.subplots(figsize=(13, 6), constrained_layout=True)
+    sns.barplot(data=resumo, x="Tipo_Entrada", y="Tempo_Medio_ms", hue="Algoritmo", ax=ax)
+    plt.title("Comparacao por Tipo de Entrada (N=10.000)")
+    plt.xlabel("Tipo de Entrada")
+    plt.ylabel("Tempo medio (ms)")
+    plt.legend(title="Algoritmo", bbox_to_anchor=(1.02, 1), loc="upper left")
+
+    destino = pasta_saida / "grafico_4_por_tipo_entrada.png"
+    fig.savefig(destino, dpi=200)
+    plt.close(fig)
+    auxiliar = _gerar_grafico_auxiliar_tempos_baixos(
+        resumo,
+        "Tipo_Entrada",
+        "Tempo_Medio_ms",
+        "Algoritmo",
+        pasta_saida,
+        "grafico_4_por_tipo_entrada_zoom.png",
+        "Comparacao por Tipo de Entrada - Tempos Ate 10 ms",
+        "Tipo de Entrada",
+        "Tempo medio (ms)",
+        "Algoritmo",
+    )
+    return [destino] + ([auxiliar] if auxiliar else [])
+
+
+def gerar_grafico_5_por_algoritmo(df, pasta_saida):
+    """Gera um grafico individual por algoritmo mostrando tempo x tamanho x tipo de entrada.
+
+    Produz um subplot para cada algoritmo encontrado no DataFrame.
+    """
+    if "Tipo_Entrada" not in df.columns:
+        raise ValueError("Sem coluna Tipo_Entrada para o Grafico 5.")
+
+    algoritmos = sorted(df["Algoritmo"].unique())
+    n_alg = len(algoritmos)
+    if n_alg == 0:
+        raise ValueError("Sem algoritmos para o Grafico 5.")
+
+    cols = min(n_alg, 3)
+    rows = (n_alg + cols - 1) // cols
+
+    fig, axes = plt.subplots(rows, cols, figsize=(7 * cols, 5 * rows), squeeze=False)
+
+    tamanhos_alvo = [100, 1000, 10000]
+
+    for idx, algo in enumerate(algoritmos):
+        ax = axes[idx // cols][idx % cols]
+        dados_algo = df[(df["Algoritmo"] == algo) & (df["Tamanho"].isin(tamanhos_alvo))]
+
+        resumo = (
+            dados_algo.groupby(["Tamanho", "Tipo_Entrada"], as_index=False)["Tempo_Medio_ms"]
+            .mean()
+            .sort_values("Tamanho")
+        )
+
+        for entrada in resumo["Tipo_Entrada"].unique():
+            sub = resumo[resumo["Tipo_Entrada"] == entrada]
+            ax.plot(sub["Tamanho"], sub["Tempo_Medio_ms"], marker="o", label=entrada)
+
+        ax.set_title(algo, fontweight="bold")
+        ax.set_xlabel("Tamanho")
+        ax.set_ylabel("Tempo medio (ms)")
+        ax.set_xticks(tamanhos_alvo)
+        ax.set_xticklabels(["100", "1k", "10k"])
+        ax.legend(fontsize=8)
+        ax.grid(True, alpha=0.3)
+
+    for idx in range(n_alg, rows * cols):
+        axes[idx // cols][idx % cols].set_visible(False)
+
+    fig.suptitle("Desempenho Individual por Algoritmo", fontsize=16, fontweight="bold")
+    fig.tight_layout(rect=[0, 0, 1, 0.96])
+
+    destino = pasta_saida / "grafico_5_por_algoritmo.png"
+    fig.savefig(destino, dpi=200)
+    plt.close(fig)
+    return destino
+
+
+def gerar_grafico_6_vetor_x_dinamica_x_estatica(df, pasta_saida):
+    """Gera comparativo das 3 estruturas (Vetor, Dinamica, Estatica) para todos os algoritmos.
+
+    Usa N=10.000 e dados aleatorios como referencia.
+    """
+    if "Estrutura" not in df.columns:
+        raise ValueError("Sem coluna Estrutura para o Grafico 6.")
+
+    dados = df[df["Tamanho"] == 10000]
+    dados = _filtro_aleatorio(dados)
+
+    estruturas_presentes = dados["Estrutura"].nunique()
+    if estruturas_presentes < 2:
+        raise ValueError("Menos de 2 estruturas disponiveis para o Grafico 6.")
+
+    resumo = (
+        dados.groupby(["Algoritmo", "Estrutura"], as_index=False)["Tempo_Medio_ms"]
+        .mean()
+        .sort_values(["Algoritmo", "Tempo_Medio_ms"])
+    )
+
+    fig, ax = plt.subplots(figsize=(13, 6), constrained_layout=True)
+    sns.barplot(data=resumo, x="Algoritmo", y="Tempo_Medio_ms", hue="Estrutura", ax=ax)
+    ax.set_title("Vetor x Lista Dinamica x Lista Estatica (N=10.000, Aleatorio)")
+    ax.set_xlabel("Algoritmo")
+    ax.set_ylabel("Tempo medio (ms)")
+    ax.legend(title="Estrutura")
+
+    destino = pasta_saida / "grafico_6_vetor_x_dinamica_x_estatica.png"
+    fig.savefig(destino, dpi=200)
+    plt.close(fig)
+    auxiliar = _gerar_grafico_auxiliar_tempos_baixos(
+        resumo,
+        "Algoritmo",
+        "Tempo_Medio_ms",
+        "Estrutura",
+        pasta_saida,
+        "grafico_6_vetor_x_dinamica_x_estatica_zoom.png",
+        "Vetor x Dinamica x Estatica - Tempos Ate 10 ms",
+        "Algoritmo",
+        "Tempo medio (ms)",
+        "Estrutura",
+    )
+    return [destino] + ([auxiliar] if auxiliar else [])
+
+
+def gerar_grafico_7_boxplot_distribuicao(df, pasta_saida):
+    """Gera boxplot da distribuicao de tempos por algoritmo em N=10.000.
+
+    Mostra dispersao, mediana, quartis e outliers para cada algoritmo.
+    """
+    dados = df[df["Tamanho"] == 10000]
+    dados = _filtro_aleatorio(dados)
+
+    if dados.empty:
+        raise ValueError("Sem dados N=10000 para o Grafico 7.")
+
+    ordem = (
+        dados.groupby("Algoritmo")["Tempo_Medio_ms"]
+        .median()
+        .sort_values()
+        .index.tolist()
+    )
+
+    plt.figure(figsize=(12, 6))
+    sns.boxplot(data=dados, x="Algoritmo", y="Tempo_Medio_ms", order=ordem, hue="Algoritmo", legend=False)
+    plt.title("Distribuicao de Tempos por Algoritmo (N=10.000, Aleatorio)")
+    plt.xlabel("Algoritmo")
+    plt.ylabel("Tempo (ms)")
+    plt.tight_layout()
+
+    destino = pasta_saida / "grafico_7_boxplot_distribuicao.png"
     plt.savefig(destino, dpi=200)
     plt.close()
     return destino
 
 
-def gerar_todos_graficos(caminho_csv="resultados.csv", pasta_saida="docs/graficos"):
+def gerar_grafico_8_heatmap(df, pasta_saida):
+    """Gera heatmap de tempo medio: algoritmo x tamanho.
+
+    Usa dados aleatorios e estrutura Vetor como referencia principal.
+    """
+    dados = _filtro_aleatorio(df)
+
+    if "Estrutura" in dados.columns:
+        vetor = dados[dados["Estrutura"] == "Vetor"]
+        if not vetor.empty:
+            dados = vetor
+
+    if dados.empty:
+        raise ValueError("Sem dados para o Grafico 8 (heatmap).")
+
+    tabela = dados.pivot_table(
+        values="Tempo_Medio_ms",
+        index="Algoritmo",
+        columns="Tamanho",
+        aggfunc="mean",
+    )
+
+    tabela = tabela.sort_index()
+
+    plt.figure(figsize=(10, 6))
+    sns.heatmap(tabela, annot=True, fmt=".4f", cmap="YlOrRd", linewidths=0.5)
+    plt.title("Heatmap - Tempo Medio (ms): Algoritmo x Tamanho")
+    plt.xlabel("Tamanho")
+    plt.ylabel("Algoritmo")
+    plt.tight_layout()
+
+    destino = pasta_saida / "grafico_8_heatmap_algoritmo_tamanho.png"
+    plt.savefig(destino, dpi=200)
+    plt.close()
+    return destino
+
+
+def gerar_grafico_9_ranking(df, pasta_saida):
+    """Gera tabela/grafico de ranking medio por cenario.
+
+    Para cada combinacao (tamanho, tipo_entrada), classifica os algoritmos
+    do mais rapido ao mais lento e calcula a posicao media de cada um.
+    """
+    if "Tipo_Entrada" not in df.columns:
+        raise ValueError("Sem coluna Tipo_Entrada para o Grafico 9.")
+
+    if "Estrutura" in df.columns:
+        vetor = df[df["Estrutura"] == "Vetor"]
+        if not vetor.empty:
+            dados = vetor.copy()
+        else:
+            dados = df.copy()
+    else:
+        dados = df.copy()
+
+    resumo = (
+        dados.groupby(["Tamanho", "Tipo_Entrada", "Algoritmo"], as_index=False)["Tempo_Medio_ms"]
+        .mean()
+    )
+
+    resumo["Ranking"] = resumo.groupby(["Tamanho", "Tipo_Entrada"])["Tempo_Medio_ms"].rank(method="min")
+
+    ranking_medio = (
+        resumo.groupby("Algoritmo", as_index=False)["Ranking"]
+        .mean()
+        .sort_values("Ranking")
+    )
+
+    plt.figure(figsize=(10, 6))
+    cores = sns.color_palette("viridis", len(ranking_medio))
+    bars = plt.barh(ranking_medio["Algoritmo"], ranking_medio["Ranking"], color=cores)
+
+    for bar, val in zip(bars, ranking_medio["Ranking"]):
+        plt.text(bar.get_width() + 0.05, bar.get_y() + bar.get_height() / 2,
+                 f"{val:.2f}", va="center", fontweight="bold")
+
+    plt.xlabel("Posicao Media no Ranking (menor = melhor)")
+    plt.ylabel("Algoritmo")
+    plt.title("Ranking Medio por Cenario (Vetor)")
+    plt.gca().invert_yaxis()
+    plt.tight_layout()
+
+    destino = pasta_saida / "grafico_9_ranking_medio.png"
+    plt.savefig(destino, dpi=200)
+    plt.close()
+    return destino
+
+
+def carregar_todos_resultados(pasta="."):
+    """Concatena todos os CSVs resultados_*.csv encontrados na pasta.
+
+    Args:
+        pasta: diretorio onde procurar os arquivos CSV.
+
+    Returns:
+        DataFrame unificado com todos os resultados.
+
+    Raises:
+        FileNotFoundError: quando nenhum CSV e encontrado.
+    """
+    arquivos = sorted(Path(pasta).glob("resultados_*.csv"))
+    if not arquivos:
+        raise FileNotFoundError(f"Nenhum arquivo resultados_*.csv encontrado em {pasta}")
+
+    frames = []
+    for arq in arquivos:
+        try:
+            frames.append(carregar_resultados(str(arq)))
+        except Exception as e:
+            print(f"Aviso: ignorando {arq.name}: {e}")
+
+    if not frames:
+        raise FileNotFoundError("Nenhum CSV valido encontrado.")
+
+    return pd.concat(frames, ignore_index=True)
+
+
+def gerar_todos_graficos(caminho_csv=None, pasta_saida="docs/graficos"):
     """Executa a geracao de todos os graficos e reporta sucessos/erros.
 
     Args:
-        caminho_csv: caminho do CSV com os resultados.
+        caminho_csv: caminho de um CSV especifico, ou None para concatenar
+                     todos os resultados_*.csv da raiz do projeto.
         pasta_saida: pasta de destino dos arquivos de imagem.
     """
     sns.set_theme(style="whitegrid")
 
-    df = carregar_resultados(caminho_csv)
+    if caminho_csv is not None:
+        df = carregar_resultados(caminho_csv)
+    else:
+        df = carregar_todos_resultados()
     saida = Path(pasta_saida)
     saida.mkdir(parents=True, exist_ok=True)
 
@@ -352,9 +706,19 @@ def gerar_todos_graficos(caminho_csv="resultados.csv", pasta_saida="docs/grafico
         gerar_grafico_1_comparacao_geral,
         gerar_grafico_2_curva_crescimento,
         gerar_grafico_3_comparativo_estrutural,
+        gerar_grafico_4_por_tipo_entrada,
+        gerar_grafico_5_por_algoritmo,
+        gerar_grafico_6_vetor_x_dinamica_x_estatica,
+        gerar_grafico_7_boxplot_distribuicao,
+        gerar_grafico_8_heatmap,
+        gerar_grafico_9_ranking,
     ]:
         try:
-            gerados.append(gerar(df, saida))
+            resultado = gerar(df, saida)
+            if isinstance(resultado, (list, tuple)):
+                gerados.extend(resultado)
+            else:
+                gerados.append(resultado)
         except Exception as e:
             erros.append(f"{gerar.__name__}: {e}")
 
@@ -370,5 +734,9 @@ def gerar_todos_graficos(caminho_csv="resultados.csv", pasta_saida="docs/grafico
 
 
 if __name__ == "__main__":
-    gerar_todos_graficos()
+    import sys
+    if len(sys.argv) > 1:
+        gerar_todos_graficos(caminho_csv=sys.argv[1])
+    else:
+        gerar_todos_graficos()
 
